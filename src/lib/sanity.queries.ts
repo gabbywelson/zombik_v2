@@ -9,7 +9,6 @@ export const homePageQuery = /* groq */ `
       "slug": slug.current,
       publishedAt,
       excerpt,
-      contentKind,
       heroImage,
       "tags": coalesce(tags[]->{
         _id,
@@ -56,14 +55,13 @@ export const siteSettingsQuery = /* groq */ `
   }
 `;
 
-export const writingIndexQuery = /* groq */ `
+export const postIndexQuery = /* groq */ `
   *[_type == "post" && defined(slug.current)] | order(publishedAt desc) {
     _id,
     title,
     "slug": slug.current,
     publishedAt,
     excerpt,
-    contentKind,
     heroImage,
     "tags": coalesce(tags[]->{
       _id,
@@ -84,7 +82,43 @@ export const postBySlugQuery = /* groq */ `
     "slug": slug.current,
     publishedAt,
     excerpt,
-    contentKind,
+    heroImage,
+    body,
+    "tags": coalesce(tags[]->{
+      _id,
+      title,
+      "slug": slug.current
+    }, [])
+  }
+`;
+
+export const writingIndexQuery = /* groq */ `
+  *[_type == "writing" && defined(slug.current)] | order(publishedAt desc) {
+    _id,
+    title,
+    "slug": slug.current,
+    publishedAt,
+    excerpt,
+    heroImage,
+    "tags": coalesce(tags[]->{
+      _id,
+      title,
+      "slug": slug.current
+    }, [])
+  }
+`;
+
+export const writingSlugsQuery = /* groq */ `
+  *[_type == "writing" && defined(slug.current)].slug.current
+`;
+
+export const writingBySlugQuery = /* groq */ `
+  *[_type == "writing" && slug.current == $slug][0] {
+    _id,
+    title,
+    "slug": slug.current,
+    publishedAt,
+    excerpt,
     heroImage,
     body,
     "tags": coalesce(tags[]->{

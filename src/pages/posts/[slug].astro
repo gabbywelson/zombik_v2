@@ -3,11 +3,11 @@ import RichTextRenderer from '../../components/RichTextRenderer.astro';
 import SanityImage from '../../components/SanityImage.astro';
 import TagList from '../../components/TagList.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getWritingBySlug, getWritingSlugs } from '../../lib/content';
+import { getPostBySlug, getPostSlugs } from '../../lib/content';
 import { formatDate } from '../../lib/format';
 
 export async function getStaticPaths() {
-  const slugs = await getWritingSlugs();
+  const slugs = await getPostSlugs();
 
   return slugs.map((slug) => ({
     params: { slug },
@@ -15,10 +15,10 @@ export async function getStaticPaths() {
 }
 
 const slug = Astro.params.slug ?? '';
-const post = await getWritingBySlug(slug);
+const post = await getPostBySlug(slug);
 
 if (!post) {
-  throw new Error(`Writing entry not found for slug: ${slug}`);
+  throw new Error(`Post not found for slug: ${slug}`);
 }
 ---
 
@@ -31,7 +31,7 @@ if (!post) {
 
       <h1>{post.title}</h1>
       <p class="post-excerpt">{post.excerpt}</p>
-      <TagList tags={post.tags} hrefBase="/writing" />
+      <TagList tags={post.tags} hrefBase="/posts" />
 
       <SanityImage
         image={post.heroImage}
@@ -41,6 +41,6 @@ if (!post) {
       />
     </header>
 
-    <RichTextRenderer value={post.body} footnotePrefix={`writing-${post.slug}`} />
+    <RichTextRenderer value={post.body} footnotePrefix={`post-${post.slug}`} />
   </article>
 </BaseLayout>

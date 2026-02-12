@@ -53,6 +53,7 @@ Studio: `http://localhost:4321/studio`
 Sanity schema types included:
 
 - `post`
+- `writing`
 - `tag`
 - `author`
 - `homePage`
@@ -63,7 +64,11 @@ Sanity schema types included:
 Posts support:
 
 - title, date, tags, hero image
-- content kind (`blog`, `short-story`, `essay`)
+- rich text with indented style + links + footnotes
+
+Writing entries support:
+
+- title, date, tags, hero image
 - rich text with indented style + links + footnotes
 
 Portable Text editor behavior includes:
@@ -90,6 +95,7 @@ This repo includes a migration script at `/Users/welson/code/zombik_v2/scripts/i
 
 - `categories` -> Sanity `tag`
 - `posts` -> Sanity `post`
+- `short-stories` -> Sanity `writing`
 - `pages` (`home`, `about`, `now`) -> Sanity `homePage`, `aboutPage`, `nowPage`
 - `globals/header` -> `siteSettings.navItems`
 - `globals/footer.socialLinks` + post author names -> `author`

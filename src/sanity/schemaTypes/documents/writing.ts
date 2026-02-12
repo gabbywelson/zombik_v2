@@ -1,9 +1,9 @@
 import { defineArrayMember, defineField, defineType } from 'sanity';
 import { richTextContent } from '../../portableText/richTextFields';
 
-export const postType = defineType({
-  name: 'post',
-  title: 'Post',
+export const writingType = defineType({
+  name: 'writing',
+  title: 'Writing',
   type: 'document',
   fields: [
     defineField({

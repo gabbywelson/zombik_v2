@@ -3,10 +3,13 @@ import {
   authorQuery,
   homePageQuery,
   nowPageQuery,
+  postIndexQuery,
   postBySlugQuery,
   postSlugsQuery,
   siteSettingsQuery,
+  writingBySlugQuery,
   writingIndexQuery,
+  writingSlugsQuery,
 } from './sanity.queries';
 import {
   fallbackAboutPage,
@@ -15,6 +18,7 @@ import {
   fallbackNowPage,
   fallbackPosts,
   fallbackSiteSettings,
+  fallbackWriting,
 } from './fallbackContent';
 import { isSanityConfigured, sanityClient } from './sanity.client';
 import type {
@@ -26,6 +30,8 @@ import type {
   PostPageData,
   SiteSettingsData,
   TagData,
+  WritingCardData,
+  WritingPageData,
 } from './sanity.types';
 
 async function fetchWithFallback<T>(query: string, fallback: T, params?: Record<string, unknown>) {
@@ -66,6 +72,13 @@ function normalizePostCard(post: PostCardData): PostCardData {
   };
 }
 
+function normalizeWritingCard(writing: WritingCardData): WritingCardData {
+  return {
+    ...writing,
+    tags: normalizeTags((writing as WritingCardData & { tags?: unknown }).tags),
+  };
+}
+
 export async function getHomePageData(): Promise<HomePageData> {
   const page = await fetchWithFallback(homePageQuery, fallbackHomePage);
 
@@ -93,22 +106,38 @@ export async function getSiteSettingsData(): Promise<SiteSettingsData> {
   return fetchWithFallback(siteSettingsQuery, fallbackSiteSettings);
 }
 
-export async function getWritingIndexData(): Promise<PostCardData[]> {
+export async function getPostIndexData(): Promise<PostCardData[]> {
   const posts = await fetchWithFallback(
-    writingIndexQuery,
+    postIndexQuery,
     fallbackPosts.map((post) => ({
       _id: post._id,
       title: post.title,
       slug: post.slug,
       publishedAt: post.publishedAt,
       excerpt: post.excerpt,
-      contentKind: post.contentKind,
       heroImage: post.heroImage,
       tags: post.tags,
     })),
   );
 
   return Array.isArray(posts) ? posts.map(normalizePostCard) : [];
+}
+
+export async function getWritingIndexData(): Promise<WritingCardData[]> {
+  const writing = await fetchWithFallback(
+    writingIndexQuery,
+    fallbackWriting.map((entry) => ({
+      _id: entry._id,
+      title: entry.title,
+      slug: entry.slug,
+      publishedAt: entry.publishedAt,
+      excerpt: entry.excerpt,
+      heroImage: entry.heroImage,
+      tags: entry.tags,
+    })),
+  );
+
+  return Array.isArray(writing) ? writing.map(normalizeWritingCard) : [];
 }
 
 export async function getPostSlugs(): Promise<string[]> {
@@ -130,5 +159,27 @@ export async function getPostBySlug(slug: string): Promise<PostPageData | null> 
     ...post,
     tags: normalizeTags((post as PostPageData & { tags?: unknown }).tags),
     body: Array.isArray(post.body) ? post.body : [],
+  };
+}
+
+export async function getWritingSlugs(): Promise<string[]> {
+  return fetchWithFallback(
+    writingSlugsQuery,
+    fallbackWriting.map((entry) => entry.slug),
+  );
+}
+
+export async function getWritingBySlug(slug: string): Promise<WritingPageData | null> {
+  const fallback = fallbackWriting.find((entry) => entry.slug === slug) ?? null;
+  const entry = await fetchWithFallback(writingBySlugQuery, fallback, { slug });
+
+  if (!entry) {
+    return null;
+  }
+
+  return {
+    ...entry,
+    tags: normalizeTags((entry as WritingPageData & { tags?: unknown }).tags),
+    body: Array.isArray(entry.body) ? entry.body : [],
   };
 }

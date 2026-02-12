@@ -54,6 +54,21 @@ interface PayloadPost {
   _status?: string;
 }
 
+interface PayloadShortStory {
+  id: number | string;
+  title?: string | null;
+  slug?: string | null;
+  summary?: string | null;
+  content?: unknown;
+  heroImage?: PayloadMedia | null;
+  publishedAt?: string | null;
+  updatedAt?: string | null;
+  meta?: {
+    description?: string | null;
+  } | null;
+  _status?: string;
+}
+
 interface PayloadPage {
   id: number | string;
   title?: string | null;
@@ -140,6 +155,7 @@ interface ImportSummary {
   tags: number;
   authors: number;
   posts: number;
+  writing: number;
   homePage: number;
   aboutPage: number;
   nowPage: number;
@@ -596,23 +612,6 @@ function extractPageBodyBlocks(
   return blocks;
 }
 
-function mapContentKind(categories: PayloadCategory[]): 'blog' | 'short-story' | 'essay' {
-  const haystack = categories
-    .flatMap((category) => [category.slug ?? '', category.title ?? ''])
-    .join(' ')
-    .toLowerCase();
-
-  if (haystack.includes('short') || haystack.includes('story')) {
-    return 'short-story';
-  }
-
-  if (haystack.includes('essay')) {
-    return 'essay';
-  }
-
-  return 'blog';
-}
-
 function normalizePostCategories(
   post: PayloadPost,
   byId: Map<string, PayloadCategory>,
@@ -734,7 +733,7 @@ function normalizeNavHref(rawHref: string): string {
     return '/';
   }
 
-  if (href === '/posts' || href === '/short-stories') {
+  if (href === '/short-stories') {
     return '/writing';
   }
 
@@ -916,24 +915,31 @@ async function run(): Promise<void> {
   console.log(`Sanity target: ${sanityProjectId}/${sanityDataset}`);
   console.log(`Mode: ${options.dryRun ? 'dry-run' : 'write'}`);
 
-  const [posts, categories, headerGlobal, footerGlobal, homePage, aboutPage, nowPage] = await Promise.all([
-    fetchAllCollection<PayloadPost>(payloadApiBaseUrl, 'posts', payloadHeaders, {
-      depth: 2,
-      includeDrafts: options.includeDrafts,
-    }),
-    fetchAllCollection<PayloadCategory>(payloadApiBaseUrl, 'categories', payloadHeaders, {
-      depth: 2,
-      includeDrafts: true,
-    }),
-    fetchGlobal<PayloadHeaderGlobal>(payloadApiBaseUrl, 'header', payloadHeaders),
-    fetchGlobal<PayloadFooterGlobal>(payloadApiBaseUrl, 'footer', payloadHeaders),
-    fetchPageBySlug(payloadApiBaseUrl, 'home', payloadHeaders),
-    fetchPageBySlug(payloadApiBaseUrl, 'about', payloadHeaders),
-    fetchPageBySlug(payloadApiBaseUrl, 'now', payloadHeaders),
-  ]);
+  const [posts, shortStories, categories, headerGlobal, footerGlobal, homePage, aboutPage, nowPage] =
+    await Promise.all([
+      fetchAllCollection<PayloadPost>(payloadApiBaseUrl, 'posts', payloadHeaders, {
+        depth: 2,
+        includeDrafts: options.includeDrafts,
+      }),
+      fetchAllCollection<PayloadShortStory>(payloadApiBaseUrl, 'short-stories', payloadHeaders, {
+        depth: 2,
+        includeDrafts: options.includeDrafts,
+      }),
+      fetchAllCollection<PayloadCategory>(payloadApiBaseUrl, 'categories', payloadHeaders, {
+        depth: 2,
+        includeDrafts: true,
+      }),
+      fetchGlobal<PayloadHeaderGlobal>(payloadApiBaseUrl, 'header', payloadHeaders),
+      fetchGlobal<PayloadFooterGlobal>(payloadApiBaseUrl, 'footer', payloadHeaders),
+      fetchPageBySlug(payloadApiBaseUrl, 'home', payloadHeaders),
+      fetchPageBySlug(payloadApiBaseUrl, 'about', payloadHeaders),
+      fetchPageBySlug(payloadApiBaseUrl, 'now', payloadHeaders),
+    ]);
 
   if (options.verbose) {
-    console.log(`Fetched ${posts.length} post(s), ${categories.length} categor(ies).`);
+    console.log(
+      `Fetched ${posts.length} post(s), ${shortStories.length} short stor${shortStories.length === 1 ? 'y' : 'ies'}, ${categories.length} categor(ies).`,
+    );
   }
 
   const categoryById = new Map<string, PayloadCategory>();
@@ -1014,6 +1020,7 @@ async function run(): Promise<void> {
   let imagesUploaded = 0;
 
   const postDocs: Array<Record<string, unknown>> = [];
+  const writingDocs: Array<Record<string, unknown>> = [];
 
   for (const post of posts) {
     if (!post.slug || !post.title) {
@@ -1070,13 +1077,67 @@ async function run(): Promise<void> {
       },
       publishedAt: toIsoDate(post.publishedAt ?? post.updatedAt),
       excerpt: truncate(excerptSource || post.title, 300),
-      contentKind: mapContentKind(categoryDocs),
       tags: tagRefs,
       body: portableTextBody,
       heroImage,
     } satisfies Record<string, unknown>;
 
     postDocs.push(postDoc);
+  }
+
+  for (const story of shortStories) {
+    if (!story.slug || !story.title) {
+      continue;
+    }
+
+    const portableTextBody = lexicalToPortableText(
+      story.content,
+      `${sourcePrefix}-writing-${story.id}`,
+    );
+
+    const excerptSource =
+      (typeof story.summary === 'string' && story.summary.trim()) ||
+      (typeof story.meta?.description === 'string' && story.meta.description.trim()) ||
+      textFromPortableText(portableTextBody);
+
+    const heroImage = await uploadImageToSanity(
+      sanityClient,
+      payloadBaseUrl,
+      story.heroImage,
+      assetRefBySource,
+      {
+        dryRun: options.dryRun,
+        skipImages: options.skipImages,
+      },
+    );
+
+    if (heroImage && !options.dryRun && !options.skipImages) {
+      imagesUploaded += 1;
+    }
+
+    if (heroImage) {
+      heroImage.alt =
+        heroImage.alt && heroImage.alt.trim().length > 0
+          ? truncate(heroImage.alt.trim(), 200)
+          : truncate(story.title, 200);
+    }
+
+    const writingDoc = {
+      _id: toSanityId(sourcePrefix, 'writing', String(story.id)),
+      _type: 'writing',
+      title: truncate(story.title.trim(), 160),
+      slug: {
+        _type: 'slug',
+        current: story.slug.trim(),
+      },
+      publishedAt: toIsoDate(story.publishedAt ?? story.updatedAt),
+      excerpt: truncate(excerptSource || story.title, 300),
+      tags: [],
+      body: portableTextBody,
+      heroImage,
+    } satisfies Record<string, unknown>;
+
+    writingDocs.push(writingDoc);
   }
 
   const featuredPostRefs = postDocs
@@ -1214,6 +1275,7 @@ async function run(): Promise<void> {
     ...tagDocs,
     ...authorDocs,
     ...postDocs,
+    ...writingDocs,
     ...singletons,
   ];
 
@@ -1221,6 +1283,7 @@ async function run(): Promise<void> {
     tags: tagDocs.length,
     authors: authorDocs.length,
     posts: postDocs.length,
+    writing: writingDocs.length,
     homePage: 1,
     aboutPage: 1,
     nowPage: 1,
@@ -1235,6 +1298,7 @@ async function run(): Promise<void> {
         tag: tagDocs[0] ?? null,
         author: authorDocs[0] ?? null,
         post: postDocs[0] ?? null,
+        writing: writingDocs[0] ?? null,
         homePage: singletons[0],
         nowPage: singletons[2],
       },

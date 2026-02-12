@@ -2,8 +2,6 @@ import type { PortableTextBlock } from '@portabletext/types';
 
 export type { PortableTextBlock };
 
-export type ContentKind = 'blog' | 'short-story' | 'essay';
-
 export interface SanityImageSource {
   _type?: 'image';
   asset?: {
@@ -19,18 +17,25 @@ export interface TagData {
   slug: string;
 }
 
-export interface PostCardData {
+interface BaseEntryCardData {
   _id: string;
   title: string;
   slug: string;
   publishedAt: string;
   excerpt: string;
-  contentKind: ContentKind;
   heroImage?: SanityImageSource;
   tags: TagData[];
 }
 
+export interface PostCardData extends BaseEntryCardData {}
+
 export interface PostPageData extends PostCardData {
+  body: PortableTextBlock[];
+}
+
+export interface WritingCardData extends BaseEntryCardData {}
+
+export interface WritingPageData extends WritingCardData {
   body: PortableTextBlock[];
 }
 

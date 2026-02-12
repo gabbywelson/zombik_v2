@@ -5,9 +5,11 @@ import { nowPageType } from './documents/nowPage';
 import { postType } from './documents/post';
 import { siteSettingsType } from './documents/siteSettings';
 import { tagType } from './documents/tag';
+import { writingType } from './documents/writing';
 
 export const schemaTypes = [
   postType,
+  writingType,
   tagType,
   authorType,
   homePageType,

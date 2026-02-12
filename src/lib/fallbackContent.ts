@@ -6,6 +6,7 @@ import type {
   PostPageData,
   SiteSettingsData,
   TagData,
+  WritingPageData,
 } from './sanity.types';
 
 const tagCraft: TagData = { title: 'Craft', slug: 'craft' };
@@ -20,7 +21,6 @@ export const fallbackPosts: PostPageData[] = [
     publishedAt: '2026-01-20T16:00:00.000Z',
     excerpt:
       'Notes on developing a daily writing practice while balancing education consulting work.',
-    contentKind: 'blog',
     tags: [tagCraft, tagTeaching],
     body: [
       {
@@ -94,12 +94,39 @@ export const fallbackPosts: PostPageData[] = [
   },
   {
     _id: 'fallback-2',
+    title: 'What Revision Teaches About Attention',
+    slug: 'what-revision-teaches-about-attention',
+    publishedAt: '2025-10-05T15:00:00.000Z',
+    excerpt:
+      'Notes on revision habits, reading like an editor, and finding the true argument in a draft.',
+    tags: [tagCraft],
+    body: [
+      {
+        _type: 'block',
+        _key: 'e1',
+        style: 'normal',
+        markDefs: [],
+        children: [
+          {
+            _type: 'span',
+            _key: 'e1t1',
+            text: 'Revision is not only correction. It is a method for paying deeper attention.',
+            marks: [],
+          },
+        ],
+      },
+    ],
+  },
+];
+
+export const fallbackWriting: WritingPageData[] = [
+  {
+    _id: 'fallback-writing-1',
     title: 'Field Notes from a Quiet Midwestern Winter',
     slug: 'field-notes-from-a-quiet-midwestern-winter',
     publishedAt: '2025-12-02T17:30:00.000Z',
     excerpt:
       'A short story draft excerpt about small-town myth, family memory, and weather.',
-    contentKind: 'short-story',
     tags: [tagFiction],
     body: [
       {
@@ -126,32 +153,6 @@ export const fallbackPosts: PostPageData[] = [
             _type: 'span',
             _key: 's2t1',
             text: 'By dusk the road had forgotten every tire that crossed it.',
-            marks: [],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    _id: 'fallback-3',
-    title: 'What Revision Teaches About Attention',
-    slug: 'what-revision-teaches-about-attention',
-    publishedAt: '2025-10-05T15:00:00.000Z',
-    excerpt:
-      'An essay on revision habits, reading like an editor, and finding the true argument in a draft.',
-    contentKind: 'essay',
-    tags: [tagCraft],
-    body: [
-      {
-        _type: 'block',
-        _key: 'e1',
-        style: 'normal',
-        markDefs: [],
-        children: [
-          {
-            _type: 'span',
-            _key: 'e1t1',
-            text: 'Revision is not only correction. It is a method for paying deeper attention.',
             marks: [],
           },
         ],
@@ -185,7 +186,6 @@ export const fallbackHomePage: HomePageData = {
     slug: post.slug,
     publishedAt: post.publishedAt,
     excerpt: post.excerpt,
-    contentKind: post.contentKind,
     heroImage: post.heroImage,
     tags: post.tags,
   })),
@@ -317,9 +317,10 @@ export const fallbackNowPage: NowPageData = {
 export const fallbackSiteSettings: SiteSettingsData = {
   siteTitle: 'Chris Zombik',
   siteDescription:
-    'Writing by Chris Zombik: short stories, essays, and blog posts on craft and education.',
+    'Writing by Chris Zombik: blog posts, short stories, and notes on craft and education.',
   navItems: [
     { title: 'Home', href: '/' },
+    { title: 'Posts', href: '/posts' },
     { title: 'Writing', href: '/writing' },
     { title: 'Now', href: '/now' },
     { title: 'About', href: '/about' },

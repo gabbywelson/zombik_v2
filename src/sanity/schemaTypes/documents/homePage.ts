@@ -27,7 +27,7 @@ export const homePageType = defineType({
     }),
     defineField({
       name: 'featuredPosts',
-      title: 'Featured writing',
+      title: 'Featured posts',
       type: 'array',
       of: [
         defineArrayMember({

@@ -2,15 +2,17 @@
 import PostCard from '../components/PostCard.astro';
 import RichTextRenderer from '../components/RichTextRenderer.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getHomePageData, getWritingIndexData } from '../lib/content';
+import { getHomePageData, getPostIndexData, getWritingIndexData } from '../lib/content';
 
-const [homePage, writingPosts] = await Promise.all([
+const [homePage, posts, writingEntries] = await Promise.all([
   getHomePageData(),
+  getPostIndexData(),
   getWritingIndexData(),
 ]);
 
 const featuredPosts =
-  homePage.featuredPosts.length > 0 ? homePage.featuredPosts : writingPosts.slice(0, 3);
+  homePage.featuredPosts.length > 0 ? homePage.featuredPosts : posts.slice(0, 3);
+const featuredWriting = writingEntries.slice(0, 2);
 ---
 
 <BaseLayout title="Home" description="Essays, fiction, and notes by Chris Zombik.">
@@ -23,14 +25,33 @@ const featuredPosts =
 
   <section class="featured-writing reveal" style="--reveal-delay: 120ms;">
     <div class="section-heading">
-      <h2>Featured Writing</h2>
-      <a href="/writing" class="section-link">View all writing</a>
+      <h2>Featured Posts</h2>
+      <a href="/posts" class="section-link">View all posts</a>
     </div>
 
-    <div class="post-grid">
-      {featuredPosts.map((post) => (
-        <PostCard post={post} />
-      ))}
-    </div>
+    {featuredPosts.length === 0 ? (
+      <p>No posts published yet.</p>
+    ) : (
+      <div class="post-grid">
+        {featuredPosts.map((post) => (
+          <PostCard post={post} hrefPrefix="/posts" />
+        ))}
+      </div>
+    )}
   </section>
+
+  {featuredWriting.length > 0 && (
+    <section class="featured-writing reveal" style="--reveal-delay: 200ms;">
+      <div class="section-heading">
+        <h2>Latest Writing</h2>
+        <a href="/writing" class="section-link">View all writing</a>
+      </div>
+
+      <div class="post-grid">
+        {featuredWriting.map((entry) => (
+          <PostCard post={entry} hrefPrefix="/writing" />
+        ))}
+      </div>
+    </section>
+  )}
 </BaseLayout>
