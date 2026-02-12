@@ -2,6 +2,7 @@ export const homePageQuery = /* groq */ `
   *[_type == "homePage"][0] {
     heroHeading,
     heroSubheading,
+    heroImage,
     intro,
     novelCardCopy,
     memoirCardCopy,

@@ -42,6 +42,7 @@ export interface WritingPageData extends WritingCardData {
 export interface HomePageData {
   heroHeading: string;
   heroSubheading: string;
+  heroImage?: SanityImageSource;
   intro: PortableTextBlock[];
   novelCardCopy: string;
   memoirCardCopy: string;

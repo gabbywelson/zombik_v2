@@ -260,6 +260,7 @@ p {
   display: grid;
   gap: 1rem;
   margin-block: 2.2rem 3.2rem;
+  position: relative;
 }
 
 .home-hero h1 {
@@ -269,6 +270,50 @@ p {
 .home-subheading {
   font-size: clamp(1.2rem, 2.4vw, 1.5rem);
   color: var(--ink-soft);
+}
+
+.home-hero-has-image {
+  width: min(980px, 100%);
+  min-height: clamp(260px, 42vw, 390px);
+  border-radius: 22px;
+  overflow: hidden;
+  padding: clamp(1.3rem, 3vw, 2rem);
+  align-content: end;
+  isolation: isolate;
+  box-shadow: var(--shadow);
+}
+
+.home-hero-media {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: linear-gradient(145deg, var(--media-grad-start), var(--media-grad-end));
+}
+
+.home-hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.home-hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(180deg, rgba(10, 10, 10, 0.18) 0%, rgba(10, 10, 10, 0.62) 100%),
+    linear-gradient(90deg, rgba(10, 10, 10, 0.34) 0%, rgba(10, 10, 10, 0.06) 72%);
+}
+
+.home-hero-has-image h1 {
+  color: #fff;
+  text-shadow: 0 2px 22px rgba(0, 0, 0, 0.55);
+}
+
+.home-hero-has-image .home-eyebrow,
+.home-hero-has-image .home-subheading {
+  color: rgba(250, 247, 242, 0.92);
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.45);
 }
 
 .home-intro p {

@@ -1,11 +1,13 @@
 ---
 import PostCard from "../components/PostCard.astro";
+import SanityImage from "../components/SanityImage.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import {
   getHomePageData,
   getPostIndexData,
   getWritingIndexData,
 } from "../lib/content";
+import { hasImageAsset } from "../lib/sanity.client";
 
 const [homePage, posts, writingEntries] = await Promise.all([
   getHomePageData(),
@@ -18,13 +20,30 @@ const featuredPosts =
     ? homePage.featuredPosts
     : posts.slice(0, 3);
 const featuredWriting = writingEntries.slice(0, 2);
+const hasHomeHeroImage = hasImageAsset(homePage.heroImage);
 ---
 
 <BaseLayout
   title="Home"
   description="Essays, fiction, and notes by Chris Zombik."
 >
-  <section class="home-hero reveal">
+  <section class:list={["home-hero", "reveal", { "home-hero-has-image": hasHomeHeroImage }]}>
+    {
+      hasHomeHeroImage && (
+        <>
+          <div class="home-hero-media" aria-hidden="true">
+            <SanityImage
+              image={homePage.heroImage}
+              alt=""
+              class="home-hero-image"
+              sizes="(max-width: 1200px) 100vw, 1200px"
+              loading="eager"
+            />
+          </div>
+          <div class="home-hero-overlay" aria-hidden="true"></div>
+        </>
+      )
+    }
     <p class="home-eyebrow">chriszombik.com</p>
     <h1>{homePage.heroHeading}</h1>
     <p class="home-subheading">{homePage.heroSubheading}</p>

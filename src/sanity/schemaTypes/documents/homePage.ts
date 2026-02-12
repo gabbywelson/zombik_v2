@@ -19,6 +19,24 @@ export const homePageType = defineType({
       validation: (rule) => rule.required().max(220),
     }),
     defineField({
+      name: 'heroImage',
+      title: 'Hero image',
+      description: 'Optional background image shown behind the homepage hero text.',
+      type: 'image',
+      options: {
+        hotspot: true,
+      },
+      fields: [
+        defineField({
+          name: 'alt',
+          title: 'Alt text',
+          type: 'string',
+          description: 'Optional description for accessibility.',
+          validation: (rule) => rule.max(200),
+        }),
+      ],
+    }),
+    defineField({
       name: 'intro',
       title: 'Intro',
       type: 'array',
