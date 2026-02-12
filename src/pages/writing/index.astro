@@ -50,7 +50,12 @@ const tags = Array.from(tagsBySlug.values()).sort((a, b) => a.title.localeCompar
       ) : (
         <div class="post-grid">
           {posts.map((post) => (
-            <PostCard post={post} hrefPrefix="/writing" />
+            <PostCard
+              post={post}
+              hrefPrefix="/writing"
+              showHeroImage={false}
+              showTags={false}
+            />
           ))}
         </div>
       )}
@@ -66,7 +71,12 @@ const tags = Array.from(tagsBySlug.values()).sort((a, b) => a.title.localeCompar
           <h2>{tag.title}</h2>
           <div class="post-grid">
             {taggedPosts.map((post) => (
-              <PostCard post={post} hrefPrefix="/writing" />
+              <PostCard
+                post={post}
+                hrefPrefix="/writing"
+                showHeroImage={false}
+                showTags={false}
+              />
             ))}
           </div>
         </section>

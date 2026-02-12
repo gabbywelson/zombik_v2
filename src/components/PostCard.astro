@@ -7,21 +7,25 @@ import TagList from './TagList.astro';
 interface Props {
   post: PostCardData | WritingCardData;
   hrefPrefix?: string;
+  showHeroImage?: boolean;
+  showTags?: boolean;
 }
 
-const { post, hrefPrefix = '/posts' } = Astro.props;
+const { post, hrefPrefix = '/posts', showHeroImage = true, showTags = true } = Astro.props;
 const href = `${hrefPrefix}/${post.slug}`;
 ---
 
-<article class="post-card">
-  <a class="post-card-image-wrap" href={href}>
-    <SanityImage
-      image={post.heroImage}
-      alt={post.heroImage?.alt ?? post.title}
-      class="post-card-image"
-      sizes="(max-width: 980px) 92vw, 520px"
-    />
-  </a>
+<article class:list={['post-card', { 'post-card-no-image': !showHeroImage }]}>
+  {showHeroImage && (
+    <a class="post-card-image-wrap" href={href}>
+      <SanityImage
+        image={post.heroImage}
+        alt={post.heroImage?.alt ?? post.title}
+        class="post-card-image"
+        sizes="(max-width: 980px) 92vw, 520px"
+      />
+    </a>
+  )}
 
   <div class="post-card-content">
     <p class="post-card-meta">
@@ -34,6 +38,6 @@ const href = `${hrefPrefix}/${post.slug}`;
 
     <p class="post-card-excerpt">{post.excerpt}</p>
 
-    <TagList tags={post.tags} hrefBase={hrefPrefix} />
+    {showTags && <TagList tags={post.tags} hrefBase={hrefPrefix} />}
   </div>
 </article>

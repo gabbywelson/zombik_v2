@@ -1,6 +1,5 @@
 ---
 import RichTextRenderer from '../../components/RichTextRenderer.astro';
-import SanityImage from '../../components/SanityImage.astro';
 import TagList from '../../components/TagList.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getWritingBySlug, getWritingSlugs } from '../../lib/content';
@@ -32,13 +31,6 @@ if (!post) {
       <h1>{post.title}</h1>
       <p class="post-excerpt">{post.excerpt}</p>
       <TagList tags={post.tags} hrefBase="/writing" />
-
-      <SanityImage
-        image={post.heroImage}
-        alt={post.heroImage?.alt ?? post.title}
-        class="post-hero"
-        loading="eager"
-      />
     </header>
 
     <RichTextRenderer value={post.body} footnotePrefix={`writing-${post.slug}`} />

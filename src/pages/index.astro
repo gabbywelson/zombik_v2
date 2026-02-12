@@ -107,7 +107,12 @@ const hasHomeHeroImage = hasImageAsset(homePage.heroImage);
 
         <div class="post-grid">
           {featuredWriting.map((entry) => (
-            <PostCard post={entry} hrefPrefix="/writing" />
+            <PostCard
+              post={entry}
+              hrefPrefix="/writing"
+              showHeroImage={false}
+              showTags={false}
+            />
           ))}
         </div>
       </section>
