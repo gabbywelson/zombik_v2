@@ -1,8 +1,12 @@
 ---
-import PostCard from '../components/PostCard.astro';
-import RichTextRenderer from '../components/RichTextRenderer.astro';
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { getHomePageData, getPostIndexData, getWritingIndexData } from '../lib/content';
+import PostCard from "../components/PostCard.astro";
+import RichTextRenderer from "../components/RichTextRenderer.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import {
+  getHomePageData,
+  getPostIndexData,
+  getWritingIndexData,
+} from "../lib/content";
 
 const [homePage, posts, writingEntries] = await Promise.all([
   getHomePageData(),
@@ -11,16 +15,47 @@ const [homePage, posts, writingEntries] = await Promise.all([
 ]);
 
 const featuredPosts =
-  homePage.featuredPosts.length > 0 ? homePage.featuredPosts : posts.slice(0, 3);
+  homePage.featuredPosts.length > 0
+    ? homePage.featuredPosts
+    : posts.slice(0, 3);
 const featuredWriting = writingEntries.slice(0, 2);
 ---
 
-<BaseLayout title="Home" description="Essays, fiction, and notes by Chris Zombik.">
+<BaseLayout
+  title="Home"
+  description="Essays, fiction, and notes by Chris Zombik."
+>
   <section class="home-hero reveal">
     <p class="home-eyebrow">chriszombik.com</p>
     <h1>{homePage.heroHeading}</h1>
     <p class="home-subheading">{homePage.heroSubheading}</p>
-    <RichTextRenderer value={homePage.intro} includeFootnotes={false} class="home-intro" />
+
+    <!-- TODO - if we want to add separate intro for home page, we can use this -->
+    <!-- <RichTextRenderer
+      value={homePage.intro}
+      includeFootnotes={false}
+      class="home-intro"
+    /> -->
+  </section>
+
+  <section class="working-on reveal" style="--reveal-delay: 80ms;">
+    <div class="section-heading">
+      <h2>What I&apos;m working on</h2>
+    </div>
+
+    <div class="working-on-grid">
+      <article class="working-on-card">
+        <p class="home-eyebrow">Current Project</p>
+        <h3>The novel</h3>
+        <p>{homePage.novelCardCopy}</p>
+      </article>
+
+      <article class="working-on-card">
+        <p class="home-eyebrow">Current Project</p>
+        <h3>The memoir</h3>
+        <p>{homePage.memoirCardCopy}</p>
+      </article>
+    </div>
   </section>
 
   <section class="featured-writing reveal" style="--reveal-delay: 120ms;">
@@ -29,29 +64,35 @@ const featuredWriting = writingEntries.slice(0, 2);
       <a href="/posts" class="section-link">View all posts</a>
     </div>
 
-    {featuredPosts.length === 0 ? (
-      <p>No posts published yet.</p>
-    ) : (
-      <div class="post-grid">
-        {featuredPosts.map((post) => (
-          <PostCard post={post} hrefPrefix="/posts" />
-        ))}
-      </div>
-    )}
+    {
+      featuredPosts.length === 0 ? (
+        <p>No posts published yet.</p>
+      ) : (
+        <div class="post-grid">
+          {featuredPosts.map((post) => (
+            <PostCard post={post} hrefPrefix="/posts" />
+          ))}
+        </div>
+      )
+    }
   </section>
 
-  {featuredWriting.length > 0 && (
-    <section class="featured-writing reveal" style="--reveal-delay: 200ms;">
-      <div class="section-heading">
-        <h2>Latest Writing</h2>
-        <a href="/writing" class="section-link">View all writing</a>
-      </div>
+  {
+    featuredWriting.length > 0 && (
+      <section class="featured-writing reveal" style="--reveal-delay: 200ms;">
+        <div class="section-heading">
+          <h2>Latest Writing</h2>
+          <a href="/writing" class="section-link">
+            View all writing
+          </a>
+        </div>
 
-      <div class="post-grid">
-        {featuredWriting.map((entry) => (
-          <PostCard post={entry} hrefPrefix="/writing" />
-        ))}
-      </div>
-    </section>
-  )}
+        <div class="post-grid">
+          {featuredWriting.map((entry) => (
+            <PostCard post={entry} hrefPrefix="/writing" />
+          ))}
+        </div>
+      </section>
+    )
+  }
 </BaseLayout>

@@ -81,9 +81,19 @@ function normalizeWritingCard(writing: WritingCardData): WritingCardData {
 
 export async function getHomePageData(): Promise<HomePageData> {
   const page = await fetchWithFallback(homePageQuery, fallbackHomePage);
+  const novelCardCopy =
+    typeof page.novelCardCopy === 'string' && page.novelCardCopy.trim().length > 0
+      ? page.novelCardCopy
+      : fallbackHomePage.novelCardCopy;
+  const memoirCardCopy =
+    typeof page.memoirCardCopy === 'string' && page.memoirCardCopy.trim().length > 0
+      ? page.memoirCardCopy
+      : fallbackHomePage.memoirCardCopy;
 
   return {
     ...page,
+    novelCardCopy,
+    memoirCardCopy,
     featuredPosts: Array.isArray(page.featuredPosts)
       ? page.featuredPosts.map(normalizePostCard)
       : [],

@@ -1175,6 +1175,10 @@ async function run(): Promise<void> {
 
   const homeIntroBlocks = homeHeroBlocks.filter((block) => block.style === 'normal').slice(0, 2);
   const homeIntro = homeIntroBlocks.length > 0 ? homeIntroBlocks : [makeParagraphBlock('normal', homeHeroSubheading, [], `${sourcePrefix}-home-intro`)];
+  const novelCardCopy =
+    'I am revising my first novel and circulating a draft to literary agents while preparing MFA applications.';
+  const memoirCardCopy =
+    'I am outlining a memoir project around education, place, and family history, with early chapter sketches in progress.';
 
   const aboutBlocks = extractPageBodyBlocks(aboutPage, `${sourcePrefix}-about`, {
     includeHeroRichText: false,
@@ -1247,6 +1251,8 @@ async function run(): Promise<void> {
       heroHeading: homeHeroHeading,
       heroSubheading: homeHeroSubheading,
       intro: homeIntro,
+      novelCardCopy,
+      memoirCardCopy,
       featuredPosts: featuredPostRefs,
     },
     {

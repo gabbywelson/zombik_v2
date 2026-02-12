@@ -3,6 +3,8 @@ export const homePageQuery = /* groq */ `
     heroHeading,
     heroSubheading,
     intro,
+    novelCardCopy,
+    memoirCardCopy,
     featuredPosts[]->{
       _id,
       title,

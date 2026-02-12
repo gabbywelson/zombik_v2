@@ -26,6 +26,22 @@ export const homePageType = defineType({
       validation: (rule) => rule.min(1),
     }),
     defineField({
+      name: 'novelCardCopy',
+      title: 'The Novel copy',
+      description: 'Homepage card copy for "The Novel".',
+      type: 'text',
+      rows: 5,
+      validation: (rule) => rule.required().max(480),
+    }),
+    defineField({
+      name: 'memoirCardCopy',
+      title: 'The memoir copy',
+      description: 'Homepage card copy for "The memoir".',
+      type: 'text',
+      rows: 5,
+      validation: (rule) => rule.required().max(480),
+    }),
+    defineField({
       name: 'featuredPosts',
       title: 'Featured posts',
       type: 'array',

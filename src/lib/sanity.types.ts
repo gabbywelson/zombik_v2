@@ -43,6 +43,8 @@ export interface HomePageData {
   heroHeading: string;
   heroSubheading: string;
   intro: PortableTextBlock[];
+  novelCardCopy: string;
+  memoirCardCopy: string;
   featuredPosts: PostCardData[];
 }
 

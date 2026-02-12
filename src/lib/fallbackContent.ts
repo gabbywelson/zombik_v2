@@ -180,6 +180,10 @@ export const fallbackHomePage: HomePageData = {
       ],
     },
   ],
+  novelCardCopy:
+    'I am revising my first novel and circulating a draft to literary agents while preparing MFA applications.',
+  memoirCardCopy:
+    'I am outlining a memoir project around education, place, and family history, with early chapter sketches in progress.',
   featuredPosts: fallbackPosts.slice(0, 2).map((post) => ({
     _id: post._id,
     title: post.title,
