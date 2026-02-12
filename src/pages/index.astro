@@ -1,0 +1,36 @@
+---
+import PostCard from '../components/PostCard.astro';
+import RichTextRenderer from '../components/RichTextRenderer.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getHomePageData, getWritingIndexData } from '../lib/content';
+
+const [homePage, writingPosts] = await Promise.all([
+  getHomePageData(),
+  getWritingIndexData(),
+]);
+
+const featuredPosts =
+  homePage.featuredPosts.length > 0 ? homePage.featuredPosts : writingPosts.slice(0, 3);
+---
+
+<BaseLayout title="Home" description="Essays, fiction, and notes by Chris Zombik.">
+  <section class="home-hero reveal">
+    <p class="home-eyebrow">chriszombik.com</p>
+    <h1>{homePage.heroHeading}</h1>
+    <p class="home-subheading">{homePage.heroSubheading}</p>
+    <RichTextRenderer value={homePage.intro} includeFootnotes={false} class="home-intro" />
+  </section>
+
+  <section class="featured-writing reveal" style="--reveal-delay: 120ms;">
+    <div class="section-heading">
+      <h2>Featured Writing</h2>
+      <a href="/writing" class="section-link">View all writing</a>
+    </div>
+
+    <div class="post-grid">
+      {featuredPosts.map((post) => (
+        <PostCard post={post} />
+      ))}
+    </div>
+  </section>
+</BaseLayout>

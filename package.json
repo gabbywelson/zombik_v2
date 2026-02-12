@@ -1,12 +1,38 @@
 {
-  "name": "zombik_v2",
-  "module": "index.ts",
-  "type": "module",
+  "name": "chriszombik-com",
+  "version": "0.1.0",
   "private": true,
-  "devDependencies": {
-    "@types/bun": "latest"
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "test": "bun test"
   },
-  "peerDependencies": {
-    "typescript": "^5"
+  "dependencies": {
+    "@astrojs/react": "^4.4.2",
+    "@astrojs/vercel": "^9.0.4",
+    "@portabletext/plugin-markdown-shortcuts": "^5.0.24",
+    "@portabletext/plugin-typography": "^5.0.24",
+    "@portabletext/to-html": "^5.0.1",
+    "@sanity/astro": "^3.2.11",
+    "@sanity/client": "^7.14.1",
+    "@sanity/image-url": "^2.0.3",
+    "@sanity/vision": "^5.9.0",
+    "astro": "^5.17.2",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-is": "^19.2.0",
+    "sanity": "^5.9.0",
+    "styled-components": "^6.3.9"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.6",
+    "@types/bun": "latest",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@types/react-is": "^19.2.0",
+    "typescript": "^5.9.3"
   }
 }

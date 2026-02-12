@@ -1,0 +1,30 @@
+---
+interface Props {
+  siteTitle: string;
+}
+
+const { siteTitle } = Astro.props;
+
+const navItems = [
+  { href: '/', label: 'Home' },
+  { href: '/writing', label: 'Writing' },
+  { href: '/about', label: 'About' },
+];
+---
+
+<header class="site-header">
+  <div class="site-shell header-inner">
+    <a href="/" class="site-title">{siteTitle}</a>
+    <nav aria-label="Primary">
+      <ul class="site-nav-list">
+        {navItems.map((item) => (
+          <li>
+            <a href={item.href} class={Astro.url.pathname === item.href ? 'active' : ''}>
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</header>

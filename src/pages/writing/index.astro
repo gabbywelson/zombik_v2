@@ -1,0 +1,70 @@
+---
+import PostCard from '../../components/PostCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getWritingIndexData } from '../../lib/content';
+
+const posts = await getWritingIndexData();
+
+const tagsBySlug = new Map<string, { title: string; slug: string; count: number }>();
+
+for (const post of posts) {
+  for (const tag of post.tags) {
+    const current = tagsBySlug.get(tag.slug);
+
+    if (current) {
+      current.count += 1;
+    } else {
+      tagsBySlug.set(tag.slug, { title: tag.title, slug: tag.slug, count: 1 });
+    }
+  }
+}
+
+const tags = Array.from(tagsBySlug.values()).sort((a, b) => a.title.localeCompare(b.title));
+---
+
+<BaseLayout title="Writing" description="Short stories, essays, and posts by Chris Zombik.">
+  <section class="writing-page reveal">
+    <header class="writing-header">
+      <p class="home-eyebrow">Writing</p>
+      <h1>Essays, stories, and process notes.</h1>
+      <p>
+        A chronological archive of published pieces. Browse everything below or jump by tag.
+      </p>
+    </header>
+
+    {tags.length > 0 && (
+      <nav class="tag-filter-nav" aria-label="Browse by tag">
+        <a href="#all-writing">All</a>
+        {tags.map((tag) => (
+          <a href={`#tag-${tag.slug}`}>
+            {tag.title} <span>({tag.count})</span>
+          </a>
+        ))}
+      </nav>
+    )}
+
+    <section id="all-writing" class="writing-group">
+      <h2>All Writing</h2>
+      <div class="post-grid">
+        {posts.map((post) => (
+          <PostCard post={post} />
+        ))}
+      </div>
+    </section>
+
+    {tags.map((tag) => {
+      const taggedPosts = posts.filter((post) => post.tags.some((item) => item.slug === tag.slug));
+
+      return (
+        <section id={`tag-${tag.slug}`} class="writing-group">
+          <h2>{tag.title}</h2>
+          <div class="post-grid">
+            {taggedPosts.map((post) => (
+              <PostCard post={post} />
+            ))}
+          </div>
+        </section>
+      );
+    })}
+  </section>
+</BaseLayout>

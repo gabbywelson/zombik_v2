@@ -1,0 +1,21 @@
+---
+import type { TagData } from '../lib/sanity.types';
+
+interface Props {
+  tags: TagData[];
+}
+
+const { tags } = Astro.props;
+---
+
+{
+  tags.length > 0 && (
+    <ul class="tag-list" aria-label="Tags">
+      {tags.map((tag) => (
+        <li>
+          <a href={`/writing#tag-${tag.slug}`}>{tag.title}</a>
+        </li>
+      ))}
+    </ul>
+  )
+}
