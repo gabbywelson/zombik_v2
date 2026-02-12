@@ -688,6 +688,21 @@ p {
   transform: none;
 }
 
+.contact-thank-you {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: clamp(1rem, 2.4vw, 1.3rem);
+  background: var(--surface-soft);
+  box-shadow: var(--shadow);
+  display: grid;
+  gap: 0.8rem;
+}
+
+.contact-thank-you p {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
 .post-header {
   display: grid;
   gap: 0.9rem;

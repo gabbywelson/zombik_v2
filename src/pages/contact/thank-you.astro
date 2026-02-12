@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Thank you" description="Your message has been sent.">
+  <article class="contact-page reveal">
+    <header class="contact-header">
+      <p class="home-eyebrow">Contact</p>
+      <h1>Thanks for reaching out.</h1>
+      <p>Your message is on its way to Chris. He will follow up as soon as he can.</p>
+    </header>
+
+    <section class="contact-thank-you" aria-live="polite">
+      <p>
+        If your note was time-sensitive, you can also connect on
+        <a href="https://x.com/chriszombik" target="_blank" rel="noreferrer">X</a>
+        or
+        <a
+          href="https://www.linkedin.com/in/christopher-zombik-5b085324/"
+          target="_blank"
+          rel="noreferrer"
+        >LinkedIn</a
+        >.
+      </p>
+      <p><a class="chip-link" href="/">Return to home</a></p>
+    </section>
+  </article>
+</BaseLayout>

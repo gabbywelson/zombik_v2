@@ -2,14 +2,15 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import type { ContactStatus } from '../lib/contact';
 
+type ContactPageStatus = Exclude<ContactStatus, 'success'>;
+
 const statusParam = Astro.url.searchParams.get('status');
-const knownStatuses: ContactStatus[] = ['success', 'invalid', 'captcha', 'error'];
-const status = knownStatuses.includes(statusParam as ContactStatus)
-  ? (statusParam as ContactStatus)
+const knownStatuses: ContactPageStatus[] = ['invalid', 'captcha', 'error'];
+const status = knownStatuses.includes(statusParam as ContactPageStatus)
+  ? (statusParam as ContactPageStatus)
   : null;
 
-const statusMessages: Record<ContactStatus, string> = {
-  success: 'Thanks, your message was sent successfully.',
+const statusMessages: Record<ContactPageStatus, string> = {
   invalid: 'Please review the form and provide a valid name, email, and message.',
   captcha: 'CAPTCHA verification failed. Please try again.',
   error: 'Something went wrong while sending your message. Please try again shortly.',

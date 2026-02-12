@@ -62,6 +62,7 @@ Sanity schema types included:
 - `aboutPage`
 - `nowPage`
 - `siteSettings`
+- `contactSubmission`
 
 Posts support:
 
@@ -100,16 +101,21 @@ Required env vars:
 - `CONTACT_FROM_EMAIL`
 - `PUBLIC_TURNSTILE_SITE_KEY`
 - `TURNSTILE_SECRET_KEY`
+- `CONTACT_SANITY_WRITE_TOKEN`
 
 Optional:
 
 - `CONTACT_SUBJECT_PREFIX` (defaults to `[chriszombik.com]`)
+- `CONTACT_SANITY_PROJECT_ID` (defaults to `PUBLIC_SANITY_PROJECT_ID`)
+- `CONTACT_SANITY_DATASET` (defaults to `PUBLIC_SANITY_DATASET`)
+- `CONTACT_SANITY_API_VERSION` (defaults to `PUBLIC_SANITY_API_VERSION`)
 
 Setup steps:
 
 1. Create a Turnstile widget for `chriszombik.com` and `localhost`.
 2. Verify the sending domain/address in Resend for `CONTACT_FROM_EMAIL`.
-3. Set all variables locally in `.env` and in Vercel project settings.
+3. Create a dedicated Sanity token with create/patch access for `contactSubmission`.
+4. Set all variables locally in `.env` and in Vercel project settings.
 
 ## Importing Existing Payload Content
 

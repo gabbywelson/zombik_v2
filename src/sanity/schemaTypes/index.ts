@@ -1,5 +1,6 @@
 import { aboutPageType } from './documents/aboutPage';
 import { authorType } from './documents/author';
+import { contactSubmissionType } from './documents/contactSubmission';
 import { homePageType } from './documents/homePage';
 import { nowPageType } from './documents/nowPage';
 import { postType } from './documents/post';
@@ -12,6 +13,7 @@ export const schemaTypes = [
   writingType,
   tagType,
   authorType,
+  contactSubmissionType,
   homePageType,
   aboutPageType,
   nowPageType,
