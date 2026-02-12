@@ -45,6 +45,8 @@ Studio: `http://localhost:4321/studio`
 - `bun run preview` - preview built site
 - `bun run check` - Astro type/content checks
 - `bun run test` - unit tests (Bun)
+- `bun run import:payload:dry` - dry-run Payload -> Sanity import
+- `bun run import:payload` - execute Payload -> Sanity import
 
 ## Content model
 
@@ -78,3 +80,43 @@ Use:
 Set the same environment variables in Vercel project settings.
 
 To refresh static content on publish/unpublish, configure a Sanity webhook that triggers a Vercel deploy hook.
+
+## Importing Existing Payload Content
+
+This repo includes a migration script at `/Users/welson/code/zombik_v2/scripts/import-payload-to-sanity.ts` that imports content from a Payload API into Sanity.
+
+### What it imports
+
+- `categories` -> Sanity `tag`
+- `posts` -> Sanity `post`
+- `pages` (`home`, `about`) -> Sanity `homePage`, `aboutPage`
+- `globals/header` -> `siteSettings.navItems`
+- `globals/footer.socialLinks` + post author names -> `author`
+- payload media assets -> Sanity image assets (unless `--skip-images`)
+
+### Setup
+
+1. Configure env vars in `.env`:
+   - `SANITY_PROJECT_ID`
+   - `SANITY_DATASET`
+   - `SANITY_WRITE_TOKEN` (write access token)
+   - `PAYLOAD_BASE_URL` (defaults to `https://www.chriszombik.com`)
+2. Run a dry run:
+
+```bash
+bun run import:payload:dry
+```
+
+This writes a preview file: `payload-import-preview.json`
+
+3. Execute the import:
+
+```bash
+bun run import:payload
+```
+
+### Optional flags
+
+- `--include-drafts` include non-published Payload docs
+- `--skip-images` skip media upload to Sanity
+- `--verbose` print progress logs

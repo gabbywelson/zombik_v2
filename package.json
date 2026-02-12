@@ -8,7 +8,9 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "test": "bun test"
+    "test": "bun test",
+    "import:payload": "bun run scripts/import-payload-to-sanity.ts",
+    "import:payload:dry": "bun run scripts/import-payload-to-sanity.ts --dry-run"
   },
   "dependencies": {
     "@astrojs/react": "^4.4.2",

@@ -4,9 +4,10 @@ import { structureTool } from 'sanity/structure';
 import { PortableTextPlugins } from './src/sanity/portableText/PortableTextPlugins';
 import { schemaTypes } from './src/sanity/schemaTypes';
 
-const projectId = process.env.PUBLIC_SANITY_PROJECT_ID || 'replace-with-project-id';
-const dataset = process.env.PUBLIC_SANITY_DATASET || 'production';
-const studioBasePath = process.env.SANITY_STUDIO_BASE_PATH || '/studio';
+const projectId =
+  import.meta.env.PUBLIC_SANITY_PROJECT_ID || 'replace-with-project-id';
+const dataset = import.meta.env.PUBLIC_SANITY_DATASET || 'production';
+const studioBasePath = import.meta.env.SANITY_STUDIO_BASE_PATH || '/studio';
 
 export default defineConfig({
   name: 'default',
