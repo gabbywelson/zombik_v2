@@ -1,7 +1,8 @@
 ---
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
-import { getSiteSettingsData } from "../lib/content";
+import { getAuthorData, getSiteSettingsData } from "../lib/content";
+import { hasImageAsset, urlForImage } from "../lib/sanity.client";
 import "../styles/global.css";
 import Analytics from "@vercel/analytics/astro";
 
@@ -11,12 +12,26 @@ interface Props {
 }
 
 const { title, description } = Astro.props;
-const settings = await getSiteSettingsData();
+const [settings, author] = await Promise.all([
+  getSiteSettingsData(),
+  getAuthorData(),
+]);
 
 const siteTitle = settings.siteTitle || "Chris Zombik";
-const siteDescription =
+const pageDescription =
   description || settings.siteDescription || "Writing by Chris Zombik";
 const pageTitle = title ? `${title} | ${siteTitle}` : siteTitle;
+const socialDescription =
+  settings.siteDescription ||
+  "Writer and educational consultant. Essays, fiction, and notes by Chris Zombik.";
+const siteUrl = Astro.site?.toString() ?? "https://chriszombik.com";
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
+const ogImageUrl = hasImageAsset(author.portrait)
+  ? urlForImage(author.portrait).width(1200).height(630).fit("crop").quality(85).url()
+  : null;
+const ogImageAlt = author.name
+  ? `Portrait of ${author.name}`
+  : "Portrait of Chris Zombik";
 ---
 
 <!doctype html>
@@ -24,8 +39,26 @@ const pageTitle = title ? `${title} | ${siteTitle}` : siteTitle;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <meta name="description" content={siteDescription} />
+    <meta name="description" content={pageDescription} />
     <meta name="generator" content={Astro.generator} />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteTitle} />
+    <meta property="og:title" content={siteTitle} />
+    <meta property="og:description" content={socialDescription} />
+    <meta property="og:url" content={canonicalUrl} />
+    {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+    {ogImageUrl && <meta property="og:image:alt" content={ogImageAlt} />}
+    {ogImageUrl && <meta property="og:image:width" content="1200" />}
+    {ogImageUrl && <meta property="og:image:height" content="630" />}
+    <meta
+      name="twitter:card"
+      content={ogImageUrl ? "summary_large_image" : "summary"}
+    />
+    <meta name="twitter:title" content={siteTitle} />
+    <meta name="twitter:description" content={socialDescription} />
+    {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
+    {ogImageUrl && <meta name="twitter:image:alt" content={ogImageAlt} />}
     <link rel="alternate" type="application/rss+xml" title={`${siteTitle} RSS`} href="/rss.xml" />
     <script is:inline>
       (() => {
