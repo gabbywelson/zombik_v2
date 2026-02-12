@@ -1,8 +1,9 @@
 ---
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import { getSiteSettingsData } from '../lib/content';
-import '../styles/global.css';
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import { getSiteSettingsData } from "../lib/content";
+import "../styles/global.css";
+import Analytics from "@vercel/analytics/astro";
 
 interface Props {
   title?: string;
@@ -12,9 +13,9 @@ interface Props {
 const { title, description } = Astro.props;
 const settings = await getSiteSettingsData();
 
-const siteTitle = settings.siteTitle || 'Chris Zombik';
+const siteTitle = settings.siteTitle || "Chris Zombik";
 const siteDescription =
-  description || settings.siteDescription || 'Writing by Chris Zombik';
+  description || settings.siteDescription || "Writing by Chris Zombik";
 const pageTitle = title ? `${title} | ${siteTitle}` : siteTitle;
 ---
 
@@ -27,15 +28,17 @@ const pageTitle = title ? `${title} | ${siteTitle}` : siteTitle;
     <meta name="generator" content={Astro.generator} />
     <script is:inline>
       (() => {
-        const storageKey = 'cz-theme';
+        const storageKey = "cz-theme";
         const root = document.documentElement;
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)",
+        ).matches;
 
-        let theme = prefersDark ? 'dark' : 'light';
+        let theme = prefersDark ? "dark" : "light";
 
         try {
           const storedTheme = window.localStorage.getItem(storageKey);
-          if (storedTheme === 'light' || storedTheme === 'dark') {
+          if (storedTheme === "light" || storedTheme === "dark") {
             theme = storedTheme;
           }
         } catch {
@@ -62,5 +65,6 @@ const pageTitle = title ? `${title} | ${siteTitle}` : siteTitle;
       <slot />
     </main>
     <Footer />
+    <Analytics />
   </body>
 </html>
