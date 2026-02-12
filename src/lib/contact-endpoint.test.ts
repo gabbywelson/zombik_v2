@@ -199,4 +199,41 @@ describe('/api/contact', () => {
     expect(response.status).toBe(405);
     expect(response.headers.get('Allow')).toBe('POST');
   });
+
+  test('returns error when runtime configuration is incomplete', async () => {
+    let verifyCalls = 0;
+    let sendCalls = 0;
+    let createCalls = 0;
+
+    const handler = createContactPostHandler(
+      {
+        verifyCaptcha: async () => {
+          verifyCalls += 1;
+          return true;
+        },
+        sendEmail: async () => {
+          sendCalls += 1;
+        },
+        createQueuedSubmission: async () => {
+          createCalls += 1;
+          return { id: 'contactSubmission.test' };
+        },
+        markSubmissionSent: async () => {},
+        markSubmissionFailed: async () => {},
+        logError: () => {},
+      },
+      {
+        ...config,
+        turnstileSecretKey: '',
+      },
+    );
+
+    const response = await handler(buildPostRequest(buildBaseFormData()));
+
+    expect(response.status).toBe(303);
+    expect(response.headers.get('Location')).toBe('/contact?status=error');
+    expect(verifyCalls).toBe(0);
+    expect(createCalls).toBe(0);
+    expect(sendCalls).toBe(0);
+  });
 });

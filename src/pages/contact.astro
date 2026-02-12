@@ -1,20 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import type { ContactStatus } from '../lib/contact';
+import {
+  CONTACT_PAGE_STATUS_MESSAGES,
+  parseContactPageStatus,
+} from '../lib/contact-page';
 
-type ContactPageStatus = Exclude<ContactStatus, 'success'>;
-
-const statusParam = Astro.url.searchParams.get('status');
-const knownStatuses: ContactPageStatus[] = ['invalid', 'captcha', 'error'];
-const status = knownStatuses.includes(statusParam as ContactPageStatus)
-  ? (statusParam as ContactPageStatus)
-  : null;
-
-const statusMessages: Record<ContactPageStatus, string> = {
-  invalid: 'Please review the form and provide a valid name, email, and message.',
-  captcha: 'CAPTCHA verification failed. Please try again.',
-  error: 'Something went wrong while sending your message. Please try again shortly.',
-};
+const status = parseContactPageStatus(Astro.url.searchParams.get('status'));
 
 const envSiteKey = (import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '').trim();
 const turnstileSiteKey =
@@ -35,7 +26,7 @@ const isCaptchaConfigured = turnstileSiteKey.length > 0;
 
     {status && (
       <p class:list={['contact-status', `contact-status-${status}`]} role="status" aria-live="polite">
-        {statusMessages[status]}
+        {CONTACT_PAGE_STATUS_MESSAGES[status]}
       </p>
     )}
 
