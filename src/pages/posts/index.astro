@@ -27,7 +27,9 @@ const tags = Array.from(tagsBySlug.values()).sort((a, b) => a.title.localeCompar
     <header class="writing-header">
       <p class="home-eyebrow">Posts</p>
       <h1>Blog posts and notes.</h1>
-      <p>A chronological archive of posts on writing, education, and process.</p>
+      <p class="posts-rss-link">
+        <a href="/rss.xml" class="section-link">RSS feed</a>
+      </p>
     </header>
 
     {tags.length > 0 && (

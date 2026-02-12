@@ -327,6 +327,10 @@ p {
   margin-bottom: 0.8rem;
 }
 
+.working-on + .featured-writing {
+  margin-top: 1.5rem;
+}
+
 .working-on-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -371,6 +375,23 @@ p {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   text-decoration: none;
+}
+
+.featured-writing {
+  display: grid;
+  gap: 0;
+}
+
+.featured-writing .section-heading {
+  margin-bottom: 1.8rem;
+}
+
+.featured-writing + .featured-writing {
+  margin-top: 2.1rem;
+}
+
+.posts-rss-link {
+  margin: 0.1rem 0 0;
 }
 
 .post-grid {

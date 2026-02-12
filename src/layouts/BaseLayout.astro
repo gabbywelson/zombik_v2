@@ -26,6 +26,7 @@ const pageTitle = title ? `${title} | ${siteTitle}` : siteTitle;
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={siteDescription} />
     <meta name="generator" content={Astro.generator} />
+    <link rel="alternate" type="application/rss+xml" title={`${siteTitle} RSS`} href="/rss.xml" />
     <script is:inline>
       (() => {
         const storageKey = "cz-theme";

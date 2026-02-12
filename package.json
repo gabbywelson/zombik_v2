@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@astrojs/react": "^4.4.2",
+    "@astrojs/rss": "^4.0.15",
     "@astrojs/vercel": "^9.0.4",
     "@portabletext/plugin-markdown-shortcuts": "^5.0.24",
     "@portabletext/plugin-typography": "^5.0.24",
