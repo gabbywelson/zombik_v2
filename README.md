@@ -7,6 +7,8 @@ Astro + Sanity starter for a mostly static author site.
 - Astro (static output)
 - Sanity Studio embedded at `/studio`
 - Bun for package/runtime tooling
+- Resend for contact form email delivery
+- Cloudflare Turnstile for contact form CAPTCHA
 
 ## Quick start
 
@@ -86,6 +88,28 @@ Use:
 Set the same environment variables in Vercel project settings.
 
 To refresh static content on publish/unpublish, configure a Sanity webhook that triggers a Vercel deploy hook.
+
+## Contact Form Setup
+
+The site includes a contact form at `/contact` with server-side handling at `/api/contact`.
+
+Required env vars:
+
+- `RESEND_API_KEY`
+- `CONTACT_TO_EMAIL`
+- `CONTACT_FROM_EMAIL`
+- `PUBLIC_TURNSTILE_SITE_KEY`
+- `TURNSTILE_SECRET_KEY`
+
+Optional:
+
+- `CONTACT_SUBJECT_PREFIX` (defaults to `[chriszombik.com]`)
+
+Setup steps:
+
+1. Create a Turnstile widget for `chriszombik.com` and `localhost`.
+2. Verify the sending domain/address in Resend for `CONTACT_FROM_EMAIL`.
+3. Set all variables locally in `.env` and in Vercel project settings.
 
 ## Importing Existing Payload Content
 

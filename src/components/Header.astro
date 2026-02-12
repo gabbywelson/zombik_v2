@@ -14,13 +14,23 @@ const fallbackNavItems = [
   { href: '/posts', title: 'Posts' },
   { href: '/writing', title: 'Writing' },
   { href: '/now', title: 'Now' },
+  { href: '/contact', title: 'Contact' },
   { href: '/about', title: 'About' },
 ];
 
-const navItems =
+const baseNavItems =
   configuredNavItems && configuredNavItems.length > 0
     ? configuredNavItems
     : fallbackNavItems;
+
+const hasContactNavItem = baseNavItems.some((item) => {
+  const normalizedHref = item.href.trim().replace(/\/+$/, '') || '/';
+  return normalizedHref === '/contact';
+});
+
+const navItems = hasContactNavItem
+  ? baseNavItems
+  : [...baseNavItems, { href: '/contact', title: 'Contact' }];
 
 function isActivePath(pathname: string, href: string): boolean {
   if (href === '/') {

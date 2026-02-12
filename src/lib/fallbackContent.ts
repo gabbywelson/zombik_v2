@@ -327,6 +327,7 @@ export const fallbackSiteSettings: SiteSettingsData = {
     { title: 'Posts', href: '/posts' },
     { title: 'Writing', href: '/writing' },
     { title: 'Now', href: '/now' },
+    { title: 'Contact', href: '/contact' },
     { title: 'About', href: '/about' },
   ],
 };
