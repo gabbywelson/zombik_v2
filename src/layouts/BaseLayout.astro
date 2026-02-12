@@ -25,6 +25,26 @@ const pageTitle = title ? `${title} | ${siteTitle}` : siteTitle;
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={siteDescription} />
     <meta name="generator" content={Astro.generator} />
+    <script is:inline>
+      (() => {
+        const storageKey = 'cz-theme';
+        const root = document.documentElement;
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        let theme = prefersDark ? 'dark' : 'light';
+
+        try {
+          const storedTheme = window.localStorage.getItem(storageKey);
+          if (storedTheme === 'light' || storedTheme === 'dark') {
+            theme = storedTheme;
+          }
+        } catch {
+          // No-op: fall back to OS preference.
+        }
+
+        root.dataset.theme = theme;
+      })();
+    </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />

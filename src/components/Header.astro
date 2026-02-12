@@ -43,7 +43,91 @@ function isActivePath(pathname: string, href: string): boolean {
             </a>
           </li>
         ))}
+        <li>
+          <button type="button" class="theme-toggle" data-theme-toggle>
+            <span class="theme-toggle-label" data-theme-label>Theme</span>
+          </button>
+        </li>
       </ul>
     </nav>
   </div>
 </header>
+
+<script is:inline>
+  (() => {
+    const storageKey = 'cz-theme';
+    const button = document.querySelector('[data-theme-toggle]');
+    const label = button?.querySelector('[data-theme-label]');
+
+    if (!button || !label) {
+      return;
+    }
+
+    const root = document.documentElement;
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+    const getStoredTheme = () => {
+      try {
+        const stored = window.localStorage.getItem(storageKey);
+        return stored === 'light' || stored === 'dark' ? stored : null;
+      } catch {
+        return null;
+      }
+    };
+
+    const getPreferredTheme = () => {
+      return mediaQuery.matches ? 'dark' : 'light';
+    };
+
+    const getCurrentTheme = () => {
+      const current = root.dataset.theme;
+      if (current === 'dark' || current === 'light') {
+        return current;
+      }
+
+      return null;
+    };
+
+    const updateButton = (theme) => {
+      label.textContent = `Theme: ${theme === 'dark' ? 'Dark' : 'Light'}`;
+      button.setAttribute(
+        'aria-label',
+        theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode',
+      );
+      button.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+    };
+
+    const applyTheme = (theme) => {
+      root.dataset.theme = theme;
+      updateButton(theme);
+    };
+
+    const initialTheme = getStoredTheme() ?? getCurrentTheme() ?? getPreferredTheme();
+    applyTheme(initialTheme);
+
+    button.addEventListener('click', () => {
+      const current = getCurrentTheme() ?? getPreferredTheme();
+      const nextTheme = current === 'dark' ? 'light' : 'dark';
+
+      try {
+        window.localStorage.setItem(storageKey, nextTheme);
+      } catch {
+        // No-op: still apply theme for this session.
+      }
+
+      applyTheme(nextTheme);
+    });
+
+    const syncWithSystem = (event) => {
+      if (getStoredTheme() !== null) {
+        return;
+      }
+
+      applyTheme(event.matches ? 'dark' : 'light');
+    };
+
+    if (typeof mediaQuery.addEventListener === 'function') {
+      mediaQuery.addEventListener('change', syncWithSystem);
+    }
+  })();
+</script>
