@@ -26,6 +26,8 @@ const hasHomeHeroImage = hasImageAsset(homePage.heroImage);
 <BaseLayout
   title="Home"
   description="Essays, fiction, and notes by Chris Zombik."
+  socialImage={homePage.heroImage}
+  socialImageAlt={homePage.heroImage?.alt ?? "Chris Zombik homepage hero image"}
 >
   <section class:list={["home-hero", "reveal", { "home-hero-has-image": hasHomeHeroImage }]}>
     {

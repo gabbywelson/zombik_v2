@@ -3,15 +3,18 @@ import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import { getAuthorData, getSiteSettingsData } from "../lib/content";
 import { hasImageAsset, urlForImage } from "../lib/sanity.client";
+import type { SanityImageSource } from "../lib/sanity.types";
 import "../styles/global.css";
 import Analytics from "@vercel/analytics/astro";
 
 interface Props {
   title?: string;
   description?: string;
+  socialImage?: SanityImageSource;
+  socialImageAlt?: string;
 }
 
-const { title, description } = Astro.props;
+const { title, description, socialImage, socialImageAlt } = Astro.props;
 const [settings, author] = await Promise.all([
   getSiteSettingsData(),
   getAuthorData(),
@@ -26,12 +29,17 @@ const socialDescription =
   "Writer and educational consultant. Essays, fiction, and notes by Chris Zombik.";
 const siteUrl = Astro.site?.toString() ?? "https://chriszombik.com";
 const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
-const ogImageUrl = hasImageAsset(author.portrait)
-  ? urlForImage(author.portrait).width(1200).height(630).fit("crop").quality(85).url()
+const ogImageSource = hasImageAsset(socialImage) ? socialImage : author.portrait;
+const ogImageUrl = hasImageAsset(ogImageSource)
+  ? urlForImage(ogImageSource).width(1200).height(630).fit("crop").quality(85).url()
   : null;
-const ogImageAlt = author.name
-  ? `Portrait of ${author.name}`
-  : "Portrait of Chris Zombik";
+const ogImageAlt = socialImageAlt
+  ? socialImageAlt
+  : hasImageAsset(socialImage)
+    ? socialImage.alt ?? `${title ?? siteTitle} preview image`
+    : author.name
+      ? `Portrait of ${author.name}`
+      : "Portrait of Chris Zombik";
 ---
 
 <!doctype html>
