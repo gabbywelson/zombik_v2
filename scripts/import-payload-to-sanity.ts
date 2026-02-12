@@ -58,6 +58,8 @@ interface PayloadPage {
   id: number | string;
   title?: string | null;
   slug?: string | null;
+  updatedAt?: string | null;
+  publishedAt?: string | null;
   hero?: {
     richText?: unknown;
     authorBio?: unknown;
@@ -65,6 +67,8 @@ interface PayloadPage {
   } | null;
   layout?: Array<{
     blockType?: string;
+    heading?: string | null;
+    description?: string | null;
     columns?: Array<{
       richText?: unknown;
     }>;
@@ -138,6 +142,7 @@ interface ImportSummary {
   posts: number;
   homePage: number;
   aboutPage: number;
+  nowPage: number;
   siteSettings: number;
   imagesUploaded: number;
 }
@@ -519,6 +524,78 @@ function lexicalToPlainText(value: unknown, keyScope: string): string {
   return textFromPortableText(lexicalToPortableText(value, keyScope));
 }
 
+function extractPageBodyBlocks(
+  page: PayloadPage | null,
+  keyScope: string,
+  options: {
+    includeHeroRichText?: boolean;
+    includeAuthorBio?: boolean;
+    includeLayout?: boolean;
+  } = {},
+): PortableTextBlock[] {
+  if (!page) {
+    return [];
+  }
+
+  const includeHeroRichText = options.includeHeroRichText ?? true;
+  const includeAuthorBio = options.includeAuthorBio ?? false;
+  const includeLayout = options.includeLayout ?? false;
+  const blocks: PortableTextBlock[] = [];
+
+  if (includeHeroRichText && page.hero?.richText) {
+    blocks.push(...lexicalToPortableText(page.hero.richText, `${keyScope}-hero`));
+  }
+
+  if (includeAuthorBio && page.hero?.authorBio) {
+    blocks.push(...lexicalToPortableText(page.hero.authorBio, `${keyScope}-bio`));
+  }
+
+  if (!includeLayout) {
+    return blocks;
+  }
+
+  for (const [layoutIndex, layoutBlock] of (page.layout ?? []).entries()) {
+    const heading = layoutBlock.heading?.trim();
+    if (heading) {
+      blocks.push(
+        makeParagraphBlock(
+          'h2',
+          heading,
+          [],
+          `${keyScope}-layout-${layoutIndex}-heading`,
+        ),
+      );
+    }
+
+    const description = layoutBlock.description?.trim();
+    if (description) {
+      blocks.push(
+        makeParagraphBlock(
+          'normal',
+          description,
+          [],
+          `${keyScope}-layout-${layoutIndex}-description`,
+        ),
+      );
+    }
+
+    for (const [columnIndex, column] of (layoutBlock.columns ?? []).entries()) {
+      if (!column.richText) {
+        continue;
+      }
+
+      blocks.push(
+        ...lexicalToPortableText(
+          column.richText,
+          `${keyScope}-layout-${layoutIndex}-column-${columnIndex}`,
+        ),
+      );
+    }
+  }
+
+  return blocks;
+}
+
 function mapContentKind(categories: PayloadCategory[]): 'blog' | 'short-story' | 'essay' {
   const haystack = categories
     .flatMap((category) => [category.slug ?? '', category.title ?? ''])
@@ -839,7 +916,7 @@ async function run(): Promise<void> {
   console.log(`Sanity target: ${sanityProjectId}/${sanityDataset}`);
   console.log(`Mode: ${options.dryRun ? 'dry-run' : 'write'}`);
 
-  const [posts, categories, headerGlobal, footerGlobal, homePage, aboutPage] = await Promise.all([
+  const [posts, categories, headerGlobal, footerGlobal, homePage, aboutPage, nowPage] = await Promise.all([
     fetchAllCollection<PayloadPost>(payloadApiBaseUrl, 'posts', payloadHeaders, {
       depth: 2,
       includeDrafts: options.includeDrafts,
@@ -852,6 +929,7 @@ async function run(): Promise<void> {
     fetchGlobal<PayloadFooterGlobal>(payloadApiBaseUrl, 'footer', payloadHeaders),
     fetchPageBySlug(payloadApiBaseUrl, 'home', payloadHeaders),
     fetchPageBySlug(payloadApiBaseUrl, 'about', payloadHeaders),
+    fetchPageBySlug(payloadApiBaseUrl, 'now', payloadHeaders),
   ]);
 
   if (options.verbose) {
@@ -1014,7 +1092,11 @@ async function run(): Promise<void> {
       _ref: String(doc._id),
     }));
 
-  const homeHeroBlocks = lexicalToPortableText(homePage?.hero?.richText, `${sourcePrefix}-home-hero`);
+  const homeHeroBlocks = extractPageBodyBlocks(homePage, `${sourcePrefix}-home`, {
+    includeHeroRichText: true,
+    includeAuthorBio: false,
+    includeLayout: false,
+  });
   const homeHeroHeadingBlock = homeHeroBlocks.find((block) => block.style === 'h2' || block.style === 'h3');
   const homeHeroParagraphBlock = homeHeroBlocks.find((block) => block.style === 'normal');
 
@@ -1033,7 +1115,21 @@ async function run(): Promise<void> {
   const homeIntroBlocks = homeHeroBlocks.filter((block) => block.style === 'normal').slice(0, 2);
   const homeIntro = homeIntroBlocks.length > 0 ? homeIntroBlocks : [makeParagraphBlock('normal', homeHeroSubheading, [], `${sourcePrefix}-home-intro`)];
 
-  const aboutBlocks = lexicalToPortableText(aboutPage?.hero?.authorBio, `${sourcePrefix}-about-body`);
+  const aboutBlocks = extractPageBodyBlocks(aboutPage, `${sourcePrefix}-about`, {
+    includeHeroRichText: false,
+    includeAuthorBio: true,
+    includeLayout: false,
+  });
+
+  const nowBlocksRaw = extractPageBodyBlocks(nowPage, `${sourcePrefix}-now`, {
+    includeHeroRichText: true,
+    includeAuthorBio: false,
+    includeLayout: true,
+  });
+
+  const nowBlocks = nowBlocksRaw.length > 0
+    ? nowBlocksRaw
+    : [makeParagraphBlock('normal', 'No updates yet.', [], `${sourcePrefix}-now-empty`)];
 
   const aboutImage = await uploadImageToSanity(
     sanityClient,
@@ -1060,6 +1156,11 @@ async function run(): Promise<void> {
   if (authorDocs[0]) {
     authorDocs[0].portrait = aboutImage;
   }
+
+  const nowTitle = truncate(nowPage?.title?.trim() || 'Now', 120);
+  const nowLastUpdated = nowPage
+    ? toIsoDate(nowPage.updatedAt ?? nowPage.publishedAt).slice(0, 10)
+    : undefined;
 
   const headerNavItems = (headerGlobal?.navItems ?? [])
     .map((item) => {
@@ -1094,6 +1195,13 @@ async function run(): Promise<void> {
       body: aboutBlocks,
     },
     {
+      _id: toSanityId(sourcePrefix, 'nowPage', 'main'),
+      _type: 'nowPage',
+      title: nowTitle,
+      ...(nowLastUpdated ? { lastUpdated: nowLastUpdated } : {}),
+      body: nowBlocks,
+    },
+    {
       _id: toSanityId(sourcePrefix, 'siteSettings', 'main'),
       _type: 'siteSettings',
       siteTitle: 'Chris Zombik',
@@ -1115,6 +1223,7 @@ async function run(): Promise<void> {
     posts: postDocs.length,
     homePage: 1,
     aboutPage: 1,
+    nowPage: 1,
     siteSettings: 1,
     imagesUploaded,
   };
@@ -1127,6 +1236,7 @@ async function run(): Promise<void> {
         author: authorDocs[0] ?? null,
         post: postDocs[0] ?? null,
         homePage: singletons[0],
+        nowPage: singletons[2],
       },
     };
 

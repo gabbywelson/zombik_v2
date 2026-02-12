@@ -1,15 +1,33 @@
 ---
 interface Props {
   siteTitle: string;
+  navItems?: Array<{
+    title: string;
+    href: string;
+  }>;
 }
 
-const { siteTitle } = Astro.props;
+const { siteTitle, navItems: configuredNavItems } = Astro.props;
 
-const navItems = [
-  { href: '/', label: 'Home' },
-  { href: '/writing', label: 'Writing' },
-  { href: '/about', label: 'About' },
+const fallbackNavItems = [
+  { href: '/', title: 'Home' },
+  { href: '/writing', title: 'Writing' },
+  { href: '/now', title: 'Now' },
+  { href: '/about', title: 'About' },
 ];
+
+const navItems =
+  configuredNavItems && configuredNavItems.length > 0
+    ? configuredNavItems
+    : fallbackNavItems;
+
+function isActivePath(pathname: string, href: string): boolean {
+  if (href === '/') {
+    return pathname === '/';
+  }
+
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
 ---
 
 <header class="site-header">
@@ -19,8 +37,8 @@ const navItems = [
       <ul class="site-nav-list">
         {navItems.map((item) => (
           <li>
-            <a href={item.href} class={Astro.url.pathname === item.href ? 'active' : ''}>
-              {item.label}
+            <a href={item.href} class={isActivePath(Astro.url.pathname, item.href) ? 'active' : ''}>
+              {item.title}
             </a>
           </li>
         ))}

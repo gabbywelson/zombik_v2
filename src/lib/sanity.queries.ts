@@ -11,11 +11,11 @@ export const homePageQuery = /* groq */ `
       excerpt,
       contentKind,
       heroImage,
-      tags[]->{
+      "tags": coalesce(tags[]->{
         _id,
         title,
         "slug": slug.current
-      }
+      }, [])
     }
   }
 `;
@@ -23,6 +23,14 @@ export const homePageQuery = /* groq */ `
 export const aboutPageQuery = /* groq */ `
   *[_type == "aboutPage"][0] {
     title,
+    body
+  }
+`;
+
+export const nowPageQuery = /* groq */ `
+  *[_type == "nowPage"][0] {
+    title,
+    lastUpdated,
     body
   }
 `;
@@ -40,7 +48,11 @@ export const authorQuery = /* groq */ `
 export const siteSettingsQuery = /* groq */ `
   *[_type == "siteSettings"][0] {
     siteTitle,
-    siteDescription
+    siteDescription,
+    navItems[] {
+      title,
+      href
+    }
   }
 `;
 
@@ -53,11 +65,11 @@ export const writingIndexQuery = /* groq */ `
     excerpt,
     contentKind,
     heroImage,
-    tags[]->{
+    "tags": coalesce(tags[]->{
       _id,
       title,
       "slug": slug.current
-    }
+    }, [])
   }
 `;
 
@@ -75,10 +87,10 @@ export const postBySlugQuery = /* groq */ `
     contentKind,
     heroImage,
     body,
-    tags[]->{
+    "tags": coalesce(tags[]->{
       _id,
       title,
       "slug": slug.current
-    }
+    }, [])
   }
 `;

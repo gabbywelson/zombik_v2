@@ -2,6 +2,7 @@ import type {
   AboutPageData,
   AuthorData,
   HomePageData,
+  NowPageData,
   PostPageData,
   SiteSettingsData,
   TagData,
@@ -233,8 +234,94 @@ export const fallbackAuthor: AuthorData = {
   socialLinks: [],
 };
 
+export const fallbackNowPage: NowPageData = {
+  title: 'Now',
+  lastUpdated: '2026-02-12',
+  body: [
+    {
+      _type: 'block',
+      _key: 'n1',
+      style: 'normal',
+      markDefs: [],
+      children: [
+        {
+          _type: 'span',
+          _key: 'n1t1',
+          text:
+            'This is a now page inspired by Derek Sivers. It is a snapshot of what I am focused on right now, not a permanent bio.',
+          marks: [],
+        },
+      ],
+    },
+    {
+      _type: 'block',
+      _key: 'n2',
+      style: 'h2',
+      markDefs: [],
+      children: [
+        {
+          _type: 'span',
+          _key: 'n2t1',
+          text: 'Writing',
+          marks: [],
+        },
+      ],
+    },
+    {
+      _type: 'block',
+      _key: 'n3',
+      style: 'normal',
+      markDefs: [],
+      children: [
+        {
+          _type: 'span',
+          _key: 'n3t1',
+          text:
+            'I am revising my first novel and preparing applications for MFA programs while sharing short stories and essays.',
+          marks: [],
+        },
+      ],
+    },
+    {
+      _type: 'block',
+      _key: 'n4',
+      style: 'h2',
+      markDefs: [],
+      children: [
+        {
+          _type: 'span',
+          _key: 'n4t1',
+          text: 'Work',
+          marks: [],
+        },
+      ],
+    },
+    {
+      _type: 'block',
+      _key: 'n5',
+      style: 'normal',
+      markDefs: [],
+      children: [
+        {
+          _type: 'span',
+          _key: 'n5t1',
+          text:
+            'I continue consulting with educators and school teams on curriculum, planning, and instruction.',
+          marks: [],
+        },
+      ],
+    },
+  ],
+};
+
 export const fallbackSiteSettings: SiteSettingsData = {
   siteTitle: 'Chris Zombik',
   siteDescription:
     'Writing by Chris Zombik: short stories, essays, and blog posts on craft and education.',
+  navItems: [
+    { title: 'Home', href: '/' },
+    { title: 'Writing', href: '/writing' },
+    { title: 'Now', href: '/now' },
+    { title: 'About', href: '/about' },
+  ],
 };

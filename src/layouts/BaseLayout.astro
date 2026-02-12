@@ -37,7 +37,7 @@ const pageTitle = title ? `${title} | ${siteTitle}` : siteTitle;
     <title>{pageTitle}</title>
   </head>
   <body>
-    <Header siteTitle={siteTitle} />
+    <Header siteTitle={siteTitle} navItems={settings.navItems} />
     <main class="site-shell page-shell">
       <slot />
     </main>

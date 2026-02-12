@@ -8,7 +8,7 @@ const posts = await getWritingIndexData();
 const tagsBySlug = new Map<string, { title: string; slug: string; count: number }>();
 
 for (const post of posts) {
-  for (const tag of post.tags) {
+  for (const tag of post.tags ?? []) {
     const current = tagsBySlug.get(tag.slug);
 
     if (current) {
@@ -53,7 +53,9 @@ const tags = Array.from(tagsBySlug.values()).sort((a, b) => a.title.localeCompar
     </section>
 
     {tags.map((tag) => {
-      const taggedPosts = posts.filter((post) => post.tags.some((item) => item.slug === tag.slug));
+      const taggedPosts = posts.filter((post) =>
+        (post.tags ?? []).some((item) => item.slug === tag.slug),
+      );
 
       return (
         <section id={`tag-${tag.slug}`} class="writing-group">

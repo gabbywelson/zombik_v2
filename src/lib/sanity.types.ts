@@ -46,6 +46,12 @@ export interface AboutPageData {
   body: PortableTextBlock[];
 }
 
+export interface NowPageData {
+  title: string;
+  lastUpdated?: string;
+  body: PortableTextBlock[];
+}
+
 export interface AuthorData {
   name: string;
   roleLine: string;
@@ -60,6 +66,10 @@ export interface AuthorData {
 export interface SiteSettingsData {
   siteTitle: string;
   siteDescription: string;
+  navItems?: Array<{
+    title: string;
+    href: string;
+  }>;
 }
 
 export interface FootnoteMarkDefinition {

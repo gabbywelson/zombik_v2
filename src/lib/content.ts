@@ -2,6 +2,7 @@ import {
   aboutPageQuery,
   authorQuery,
   homePageQuery,
+  nowPageQuery,
   postBySlugQuery,
   postSlugsQuery,
   siteSettingsQuery,
@@ -11,6 +12,7 @@ import {
   fallbackAboutPage,
   fallbackAuthor,
   fallbackHomePage,
+  fallbackNowPage,
   fallbackPosts,
   fallbackSiteSettings,
 } from './fallbackContent';
@@ -19,9 +21,11 @@ import type {
   AboutPageData,
   AuthorData,
   HomePageData,
+  NowPageData,
   PostCardData,
   PostPageData,
   SiteSettingsData,
+  TagData,
 } from './sanity.types';
 
 async function fetchWithFallback<T>(query: string, fallback: T, params?: Record<string, unknown>) {
@@ -38,12 +42,47 @@ async function fetchWithFallback<T>(query: string, fallback: T, params?: Record<
   }
 }
 
+function normalizeTags(rawTags: unknown): TagData[] {
+  if (!Array.isArray(rawTags)) {
+    return [];
+  }
+
+  return rawTags
+    .filter((tag): tag is { title?: unknown; slug?: unknown; _id?: unknown } => {
+      return Boolean(tag && typeof tag === 'object');
+    })
+    .map((tag) => ({
+      _id: typeof tag._id === 'string' ? tag._id : undefined,
+      title: typeof tag.title === 'string' ? tag.title : '',
+      slug: typeof tag.slug === 'string' ? tag.slug : '',
+    }))
+    .filter((tag) => tag.title.length > 0 && tag.slug.length > 0);
+}
+
+function normalizePostCard(post: PostCardData): PostCardData {
+  return {
+    ...post,
+    tags: normalizeTags((post as PostCardData & { tags?: unknown }).tags),
+  };
+}
+
 export async function getHomePageData(): Promise<HomePageData> {
-  return fetchWithFallback(homePageQuery, fallbackHomePage);
+  const page = await fetchWithFallback(homePageQuery, fallbackHomePage);
+
+  return {
+    ...page,
+    featuredPosts: Array.isArray(page.featuredPosts)
+      ? page.featuredPosts.map(normalizePostCard)
+      : [],
+  };
 }
 
 export async function getAboutPageData(): Promise<AboutPageData> {
   return fetchWithFallback(aboutPageQuery, fallbackAboutPage);
+}
+
+export async function getNowPageData(): Promise<NowPageData> {
+  return fetchWithFallback(nowPageQuery, fallbackNowPage);
 }
 
 export async function getAuthorData(): Promise<AuthorData> {
@@ -55,7 +94,7 @@ export async function getSiteSettingsData(): Promise<SiteSettingsData> {
 }
 
 export async function getWritingIndexData(): Promise<PostCardData[]> {
-  return fetchWithFallback(
+  const posts = await fetchWithFallback(
     writingIndexQuery,
     fallbackPosts.map((post) => ({
       _id: post._id,
@@ -68,6 +107,8 @@ export async function getWritingIndexData(): Promise<PostCardData[]> {
       tags: post.tags,
     })),
   );
+
+  return Array.isArray(posts) ? posts.map(normalizePostCard) : [];
 }
 
 export async function getPostSlugs(): Promise<string[]> {
@@ -79,5 +120,15 @@ export async function getPostSlugs(): Promise<string[]> {
 
 export async function getPostBySlug(slug: string): Promise<PostPageData | null> {
   const fallback = fallbackPosts.find((post) => post.slug === slug) ?? null;
-  return fetchWithFallback(postBySlugQuery, fallback, { slug });
+  const post = await fetchWithFallback(postBySlugQuery, fallback, { slug });
+
+  if (!post) {
+    return null;
+  }
+
+  return {
+    ...post,
+    tags: normalizeTags((post as PostPageData & { tags?: unknown }).tags),
+    body: Array.isArray(post.body) ? post.body : [],
+  };
 }

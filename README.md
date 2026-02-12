@@ -57,6 +57,7 @@ Sanity schema types included:
 - `author`
 - `homePage`
 - `aboutPage`
+- `nowPage`
 - `siteSettings`
 
 Posts support:
@@ -89,7 +90,7 @@ This repo includes a migration script at `/Users/welson/code/zombik_v2/scripts/i
 
 - `categories` -> Sanity `tag`
 - `posts` -> Sanity `post`
-- `pages` (`home`, `about`) -> Sanity `homePage`, `aboutPage`
+- `pages` (`home`, `about`, `now`) -> Sanity `homePage`, `aboutPage`, `nowPage`
 - `globals/header` -> `siteSettings.navItems`
 - `globals/footer.socialLinks` + post author names -> `author`
 - payload media assets -> Sanity image assets (unless `--skip-images`)

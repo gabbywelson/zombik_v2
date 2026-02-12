@@ -344,7 +344,8 @@ p {
 }
 
 .about-page,
-.post-page {
+.post-page,
+.now-page {
   width: min(760px, 100%);
   margin-inline: auto;
   display: grid;
@@ -395,6 +396,44 @@ p {
   display: flex;
   flex-wrap: wrap;
   gap: 0.7rem 1rem;
+}
+
+.now-header {
+  display: grid;
+  gap: 0.85rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.now-header h1 {
+  font-size: clamp(2.4rem, 4.4vw, 3.3rem);
+}
+
+.now-subheading {
+  color: var(--ink-soft);
+  max-width: 62ch;
+}
+
+.now-updated {
+  display: inline-flex;
+  width: fit-content;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.24rem 0.72rem;
+  font-family: var(--font-ui);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.now-content {
+  background: rgba(255, 255, 255, 0.52);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  padding: clamp(1rem, 2.8vw, 1.4rem) clamp(1rem, 2.5vw, 1.6rem);
 }
 
 .post-header {
