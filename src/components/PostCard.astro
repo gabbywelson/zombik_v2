@@ -9,13 +9,30 @@ interface Props {
   hrefPrefix?: string;
   showHeroImage?: boolean;
   showTags?: boolean;
+  showExcerpt?: boolean;
+  layout?: 'stacked' | 'horizontal';
 }
 
-const { post, hrefPrefix = '/posts', showHeroImage = true, showTags = true } = Astro.props;
+const {
+  post,
+  hrefPrefix = '/posts',
+  showHeroImage = true,
+  showTags = true,
+  showExcerpt = true,
+  layout = 'stacked',
+} = Astro.props;
 const href = `${hrefPrefix}/${post.slug}`;
 ---
 
-<article class:list={['post-card', { 'post-card-no-image': !showHeroImage }]}>
+<article
+  class:list={[
+    'post-card',
+    {
+      'post-card-no-image': !showHeroImage,
+      'post-card-horizontal': layout === 'horizontal',
+    },
+  ]}
+>
   {showHeroImage && (
     <a class="post-card-image-wrap" href={href}>
       <SanityImage
@@ -36,7 +53,7 @@ const href = `${hrefPrefix}/${post.slug}`;
       <a href={href}>{post.title}</a>
     </h3>
 
-    <p class="post-card-excerpt">{post.excerpt}</p>
+    {showExcerpt && <p class="post-card-excerpt">{post.excerpt}</p>}
 
     {showTags && <TagList tags={post.tags} hrefBase={hrefPrefix} />}
   </div>
