@@ -115,8 +115,10 @@ p {
 }
 
 .site-shell {
-  width: min(1100px, 92vw);
+  width: 100%;
+  max-width: 1100px;
   margin-inline: auto;
+  padding-inline: clamp(1rem, 3vw, 1.6rem);
 }
 
 .page-shell {
@@ -950,11 +952,28 @@ p {
 
   .header-inner {
     flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .header-inner nav {
+    width: 100%;
   }
 
   .site-nav-list {
     width: 100%;
     justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 0.6rem 0.9rem;
+  }
+
+  .site-nav-list li:last-child {
+    flex-basis: 100%;
+    display: flex;
+  }
+
+  .theme-toggle {
+    width: fit-content;
   }
 
   .post-card-content {
