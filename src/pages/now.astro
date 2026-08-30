@@ -1,17 +1,27 @@
 ---
+/**
+ * THE /now PAGE.
+ *
+ * All the words on this page come from src/content/pages/now.md — edit that
+ * file, not this one, to change what the page says. This file only decides
+ * the layout: heading, optional "Last updated" line, then the Markdown body.
+ */
 import { render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getPageEntry } from '../lib/content';
+import { formatDate } from '../lib/format';
 
 const nowPage = await getPageEntry('now');
 if (nowPage.data.type !== 'now') throw new Error('Now content has the wrong page type.');
 const { Content } = await render(nowPage);
+const lastUpdated = nowPage.data.lastUpdated;
 ---
 
 <BaseLayout title="Now" description="What Chris Zombik is focused on now.">
   <article class="now-page reveal">
     <header class="now-header">
       <h1>{nowPage.data.title}</h1>
+      {lastUpdated && <p class="now-updated">Last updated {formatDate(lastUpdated)}</p>}
     </header>
 
     <section class="now-content">

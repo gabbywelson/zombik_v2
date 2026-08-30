@@ -1,4 +1,11 @@
 ---
+/**
+ * POST CARD — the preview block for one post or writing entry in a list.
+ *
+ * Used on the homepage, /posts, and /writing. The flags (showHeroImage,
+ * showTags, showExcerpt, layout) let each list choose how much to show.
+ * Styles live in src/styles/global.css under "Post lists".
+ */
 import type { PostCardData, WritingCardData } from '../lib/content.types';
 import LocalImage from './LocalImage.astro';
 import TagList from './TagList.astro';

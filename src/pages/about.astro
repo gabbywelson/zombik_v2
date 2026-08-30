@@ -1,4 +1,11 @@
 ---
+/**
+ * THE /about PAGE.
+ *
+ * The biography text comes from src/content/pages/about.md. The portrait and
+ * the "Elsewhere" social links come from src/content/site/author.md. Edit
+ * those files to change the content; edit this file only to change the layout.
+ */
 import { render } from 'astro:content';
 import LocalImage from '../components/LocalImage.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
@@ -7,12 +14,7 @@ import { getAuthorData, getPageEntry } from '../lib/content';
 const [aboutPage, author] = await Promise.all([getPageEntry('about'), getAuthorData()]);
 if (aboutPage.data.type !== 'about') throw new Error('About content has the wrong page type.');
 const { Content } = await render(aboutPage);
-const blueskyUrl = 'https://bsky.app/profile/chriszombik.com';
-const socialLinks = [...(author.socialLinks ?? [])];
-
-if (!socialLinks.some((link) => link.url === blueskyUrl)) {
-  socialLinks.push({ label: 'Bluesky', url: blueskyUrl });
-}
+const socialLinks = author.socialLinks ?? [];
 ---
 
 <BaseLayout title="About" description="About Chris Zombik.">

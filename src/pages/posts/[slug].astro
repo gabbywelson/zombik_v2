@@ -1,4 +1,15 @@
 ---
+/**
+ * A SINGLE BLOG POST PAGE (/posts/<slug>).
+ *
+ * The square brackets in this filename mean "one page per blog post": Astro
+ * calls getStaticPaths() below to learn every slug, then builds one HTML page
+ * for each. The slug is the Markdown filename without ".md".
+ *
+ * To change how a blog post looks (where the date goes, whether the image shows,
+ * etc.), edit the HTML at the bottom of this file. The styles live in
+ * src/styles/global.css under "Article pages".
+ */
 import { render } from 'astro:content';
 import LocalImage from '../../components/LocalImage.astro';
 import TagList from '../../components/TagList.astro';

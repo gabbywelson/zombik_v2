@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bun install)",
+      "Bash(bun run build)",
+      "Bash(bun run check)",
+      "Bash(bun run dev:*)",
+      "Bash(bun run preview:*)",
+      "Bash(bun test)",
+      "Bash(bun run contact-email:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(gh run list:*)",
+      "Bash(gh run view:*)",
+      "Bash(gh run watch:*)"
+    ]
+  }
+}

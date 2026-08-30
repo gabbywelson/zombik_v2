@@ -1,4 +1,16 @@
 ---
+/**
+ * BASE LAYOUT — the frame around every page.
+ *
+ * Every page in src/pages/ wraps its content in <BaseLayout>. This file
+ * provides the parts they all share: the <head> (browser-tab title,
+ * description, social-preview tags, fonts, favicon, RSS link), the light/dark
+ * theme bootstrap, the Header, the Footer, and the global stylesheet.
+ *
+ * Site-wide text such as the site title and description comes from
+ * src/content/site/settings.md. To add something to every page (say, an
+ * announcement bar), this is the place.
+ */
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import { getAuthorData, getSiteSettingsData } from "../lib/content";

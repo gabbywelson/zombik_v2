@@ -1,3 +1,30 @@
+/*
+  SITE STYLES — every visual rule for the whole site lives in this one file.
+
+  HOW IT IS ORGANIZED (search for the section comments below):
+    :root / html[data-theme='dark']   Colors and fonts, as variables. Change a
+                                       color here and it changes everywhere.
+    Base                               Body text, links, headings.
+    Header / Footer                    The bar at the top and the strip at the bottom.
+    Motion                             The gentle fade-in when a page loads.
+    Shared editorial typography        Small uppercase labels, section headings.
+    Home                               Homepage hero and sections.
+    Post lists                         The cards on the homepage, /posts, /writing.
+    Archive pages                      The /posts and /writing list pages and tag nav.
+    About, now, contact, articles      Those pages' headers and layouts.
+    Contact                            The email line on /contact.
+    Article pages                      A single post or writing entry, including
+                                       `.rich-text`, which styles Markdown output.
+    Responsive                         Adjustments for narrow (phone) screens.
+
+  COLORS: the site has a light and a dark theme. Each color is a variable
+  defined twice: once under `:root` (light) and once under
+  `html[data-theme='dark']` (dark). Keep both in sync when you change one.
+
+  FONTS: loaded from Google Fonts in src/layouts/BaseLayout.astro. To change a
+  font, update the <link> there and the --font-* variables below.
+*/
+
 :root {
   color-scheme: light;
   --paper: #f3efe8;
@@ -33,6 +60,7 @@ html[data-theme='dark'] {
   --code-border: rgba(220, 190, 160, 0.2);
 }
 
+/* Base */
 * {
   box-sizing: border-box;
 }
@@ -722,6 +750,7 @@ img {
   border: 0;
 }
 
+/* Responsive: adjustments for phones and narrow windows */
 @media (max-width: 680px) {
   body {
     font-size: 1rem;

@@ -6,8 +6,6 @@ lastUpdated: "2026-02-02"
 
 This is a [now page](https://nownownow.com/about) inspired by [Derek Sivers](https://sive.rs/nowff) and others. I made it so that instead of reading my posts on social media you can read this page instead.
 
-*Last updated Feb 2, 2026.*
-
 ### Year Theme
 
 My theme for 2026 is the **Year of Books**. The general gist is that I want to devote more time and attention to books. Reading books, writing books, discussing and sharing books with others. This is not a resolution to "read 100 books this year" or anything like that, but rather a North Star to guide me towards a more intentional and mindful use of my time on things I believe will make me happier and smarter.

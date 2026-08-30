@@ -1,4 +1,13 @@
 ---
+/**
+ * SITE HEADER — the site title, the navigation links, and the theme toggle.
+ * It appears on every page because src/layouts/BaseLayout.astro includes it.
+ *
+ * The navigation links come from `navItems` in src/content/site/settings.md.
+ * A "Contact" link is always appended if it isn't listed there. The <script>
+ * at the bottom powers the light/dark theme button and remembers the choice
+ * in the visitor's browser.
+ */
 interface Props {
   siteTitle: string;
   navItems?: Array<{

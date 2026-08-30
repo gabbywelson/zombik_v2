@@ -1,4 +1,12 @@
 ---
+/**
+ * OPTIMIZED IMAGE — a thin wrapper around Astro's <Image>.
+ *
+ * Give it a picture from src/assets/images/ and Astro generates several
+ * resized copies at build time, so phones download a small version and
+ * desktops a larger one. If no image is passed, nothing is rendered, which
+ * lets pages call it without checking first.
+ */
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 

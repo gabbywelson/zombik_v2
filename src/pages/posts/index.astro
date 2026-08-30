@@ -1,4 +1,12 @@
 ---
+/**
+ * THE /posts LIST PAGE.
+ *
+ * Lists every one of the blog posts from src/content/posts/, newest
+ * first, followed by one section per tag. Tags are collected automatically
+ * from the `tags` field of each entry, so there is nothing to configure here:
+ * add a tag to an entry and a section for it appears.
+ */
 import PostCard from '../../components/PostCard.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getPostIndexData } from '../../lib/content';

@@ -1,8 +1,17 @@
+/**
+ * THE RSS FEED (/rss.xml).
+ *
+ * Feed readers subscribe to this URL to be told when a new post is published.
+ * It lists every blog post (not writing entries), newest first, with the
+ * excerpt as the description. It is generated at build time like every other
+ * page, so nothing here needs to run on a server.
+ */
 import rss from '@astrojs/rss';
 import type { APIRoute } from 'astro';
 import { getPostIndexData, getSiteSettingsData } from '../lib/content';
 
-const FALLBACK_SITE_URL = 'https://chriszombik.com';
+// Only used if the `site` setting in astro.config.mjs is somehow missing.
+const FALLBACK_SITE_URL = 'https://www.chriszombik.com';
 
 export const GET: APIRoute = async (context) => {
   const [posts, siteSettings] = await Promise.all([
