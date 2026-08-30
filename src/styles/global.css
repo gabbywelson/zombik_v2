@@ -254,8 +254,7 @@ img {
 /* Shared editorial typography */
 .post-card-meta,
 .post-meta,
-.now-updated,
-.contact-field label {
+.now-updated {
   color: var(--muted);
   font-family: var(--font-ui);
   font-size: 0.69rem;
@@ -588,92 +587,18 @@ img {
   color: var(--ink-soft);
 }
 
-/* Contact form */
-.contact-status {
-  padding: 0.7rem 0;
-  border-block: 1px solid var(--line);
-  color: var(--ink-soft);
-  font-family: var(--font-ui);
-  font-size: 0.78rem;
-}
-
-.contact-status-success {
-  border-color: #4f8268;
-}
-
-.contact-status-invalid,
-.contact-status-captcha,
-.contact-status-error {
-  border-color: #9e5a54;
-}
-
-.contact-form {
-  display: grid;
-  gap: 1.5rem;
-}
-
-.contact-field {
-  display: grid;
-  gap: 0.4rem;
-}
-
-.contact-field input,
-.contact-field textarea {
-  width: 100%;
-  padding: 0.7rem 0.75rem;
-  border: 1px solid var(--line);
-  border-radius: 0;
+/* Contact */
+.contact-email {
+  margin: 0;
   color: var(--ink);
-  background: var(--field);
-  font: inherit;
-}
-
-.contact-field textarea {
-  min-height: 10rem;
-  resize: vertical;
-}
-
-.contact-honeypot {
-  position: absolute;
-  left: -9999px;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-}
-
-.contact-turnstile {
-  min-height: 68px;
-}
-
-.contact-submit {
-  width: fit-content;
-  padding: 0.6875rem 1.125rem;
-  border: 1px solid var(--ink);
-  border-radius: 0;
-  color: var(--paper);
-  background: var(--ink);
   font-family: var(--font-ui);
-  font-size: 0.9rem;
-  cursor: pointer;
+  font-size: clamp(1.1rem, 3.4vw, 1.5rem);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
-.contact-submit:hover {
-  border-color: var(--accent);
-  background: var(--accent);
-}
-
-.contact-submit:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
-.contact-thank-you {
-  display: grid;
-  gap: 0.8rem;
-}
-
-.contact-thank-you p {
-  color: var(--ink-soft);
+.contact-email a {
+  text-underline-offset: 0.2em;
 }
 
 /* Article pages */

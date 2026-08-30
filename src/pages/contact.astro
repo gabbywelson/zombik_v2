@@ -1,89 +1,57 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import {
-  CONTACT_PAGE_STATUS_MESSAGES,
-  parseContactPageStatus,
-} from '../lib/contact-page';
+import { getAuthorData } from '../lib/content';
 
-const status = parseContactPageStatus(Astro.url.searchParams.get('status'));
-
-const envSiteKey = (import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '').trim();
-const turnstileSiteKey =
-  envSiteKey || (import.meta.env.DEV ? '1x00000000000000000000AA' : '');
-const isCaptchaConfigured = turnstileSiteKey.length > 0;
+// The email address itself lives (encoded) in src/lib/contact-email.ts and is
+// decoded in the browser by the <script> at the bottom of this file. Without
+// JavaScript, visitors see the spelled-out hint below instead.
+const author = await getAuthorData();
+const socialLinks = author.socialLinks ?? [];
 ---
 
-<BaseLayout title="Contact" description="Send a message to Chris Zombik.">
+<BaseLayout title="Contact" description="How to get in touch with Chris Zombik.">
   <article class="contact-page reveal">
     <header class="contact-header">
       <h1>Get in touch</h1>
       <p>
-        If you would like to connect about writing, speaking, or consulting work, send a message
-        below.
+        Chris would love to hear from you, whether it's about his writing, a project, an event, or
+        just to say hello. The best way to reach him is by email:
       </p>
     </header>
 
-    {status && (
-      <p class:list={['contact-status', `contact-status-${status}`]} role="status" aria-live="polite">
-        {CONTACT_PAGE_STATUS_MESSAGES[status]}
-      </p>
+    <p class="contact-email">
+      <span data-contact-email>
+        the first letter of his first name, followed by his last name, at gmail dot com
+      </span>
+    </p>
+
+    {socialLinks.length > 0 && (
+      <footer class="about-links">
+        <h2>Elsewhere</h2>
+        <ul>
+          {socialLinks.map((link) => (
+            <li>
+              <a href={link.url} target="_blank" rel="noreferrer noopener">
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </footer>
     )}
-
-    {!isCaptchaConfigured && (
-      <p class:list={['contact-status', 'contact-status-error']} role="alert">
-        Contact form configuration is incomplete. Please try again later.
-      </p>
-    )}
-
-    <form class="contact-form" action="/api/contact" method="POST">
-      <div class="contact-field">
-        <label for="name">Name</label>
-        <input id="name" name="name" type="text" autocomplete="name" required maxlength="100" />
-      </div>
-
-      <div class="contact-field">
-        <label for="email">Email</label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          autocomplete="email"
-          inputmode="email"
-          required
-          maxlength="254"
-        />
-      </div>
-
-      <div class="contact-field">
-        <label for="message">Message</label>
-        <textarea id="message" name="message" rows="8" required minlength="10" maxlength="5000" />
-      </div>
-
-      <div class="contact-honeypot" aria-hidden="true">
-        <label for="company">Company</label>
-        <input id="company" name="company" type="text" tabindex="-1" autocomplete="off" />
-      </div>
-
-      <div class="contact-turnstile">
-        {isCaptchaConfigured ? (
-          <div class="cf-turnstile" data-sitekey={turnstileSiteKey} data-theme="auto" />
-        ) : (
-          <p>CAPTCHA is unavailable at the moment.</p>
-        )}
-      </div>
-
-      <button class="contact-submit" type="submit" disabled={!isCaptchaConfigured}>
-        Send message
-      </button>
-    </form>
   </article>
-
-  {isCaptchaConfigured && (
-    <script
-      is:inline
-      src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-      async
-      defer
-    ></script>
-  )}
 </BaseLayout>
+
+<script>
+  import { CONTACT_EMAIL, decodeEmail } from '../lib/contact-email';
+
+  const target = document.querySelector('[data-contact-email]');
+
+  if (target) {
+    const address = decodeEmail(CONTACT_EMAIL);
+    const link = document.createElement('a');
+    link.href = `mailto:${address}`;
+    link.textContent = address;
+    target.replaceChildren(link);
+  }
+</script>

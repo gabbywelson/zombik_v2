@@ -5,7 +5,6 @@ import { getAuthorData, getSiteSettingsData } from "../lib/content";
 import { getImage } from "astro:assets";
 import type { ImageMetadata } from "astro";
 import "../styles/global.css";
-import Analytics from "@vercel/analytics/astro";
 
 interface Props {
   title?: string;
@@ -112,6 +111,5 @@ const ogImageAlt = socialImageAlt
       <slot />
     </main>
     <Footer />
-    <Analytics />
   </body>
 </html>
