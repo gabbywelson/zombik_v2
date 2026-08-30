@@ -94,7 +94,7 @@ The site is published by GitHub Pages from the `.github/workflows/deploy.yml` wo
 One-time repository setup (already done, recorded here for reference):
 
 1. In the repository's **Settings → Pages**, set **Source** to **GitHub Actions**.
-2. `public/CNAME` contains the custom domain (`www.chriszombik.com`). GitHub reads it from the build output and configures the custom domain automatically.
+2. In **Settings → Pages**, set **Custom domain** to `www.chriszombik.com`. (With Actions-based deploys GitHub ignores the `public/CNAME` file, which is kept only as a record of the domain.)
 3. Point DNS at GitHub Pages. At the DNS provider for `chriszombik.com`:
    - `www` → `CNAME` record to `gabbywelson.github.io` (or `<owner>.github.io` for whoever owns the repository)
    - apex (`chriszombik.com`) → `A` records to `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153` (GitHub redirects the apex to `www`)
