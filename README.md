@@ -339,6 +339,12 @@ Transfer): afterwards, re-check Settings → Pages (Source = GitHub Actions, cus
 update the `www` CNAME record to the new owner's `<username>.github.io`, and update the `git clone`
 URL on any computer that has a copy (`git remote set-url origin git@github.com:<new-owner>/zombik_v2.git`).
 
+**Bluesky handle.** Chris's Bluesky handle is `chriszombik.com`. Bluesky verifies that by fetching
+`https://chriszombik.com/.well-known/atproto-did`, which is the file `public/.well-known/atproto-did`
+in this repository (it contains his account's `did:plc:…` identifier). Do not delete it. If Bluesky
+ever shows the handle as invalid, open Bluesky → Settings → Account → Handle → "I have my own domain"
+→ `chriszombik.com` → "Verify Text File".
+
 **Cost.** GitHub Pages is free for public repositories. The only recurring cost is the domain
 registration itself.
 
